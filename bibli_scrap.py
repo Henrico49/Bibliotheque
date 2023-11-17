@@ -2,6 +2,46 @@ from ebooklib import epub
 import requests
 from bs4 import BeautifulSoup
 import os
+import PyPDF2
+from langdetect import detect
+import re
+
+def detect_language(text):
+    try:
+        language = detect(text)
+        return language
+    except Exception as e:
+        print("Erreur lors de la détection de la langue :", str(e))
+        return None
+
+def extract_first_number(input_string):
+    # Utilise une expression régulière pour trouver le premier nombre
+    match = re.search(r'\b\d+\b', input_string)
+
+    # Vérifie si une correspondance a été trouvée
+    if match:
+        return int(match.group())
+    else:
+        return None
+
+def extract_info_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PyPDF2.PdfReader(file)
+
+        # Récupération des informations
+        page = pdf_reader.pages[0]
+        texte = page.extract_text()
+        lignes = texte.splitlines()
+        titre = lignes[2]
+        auteur = lignes[1]
+        sujet = ""
+        date = extract_first_number(lignes[3])
+        page = pdf_reader.pages[1]
+        texte = page.extract_text()
+        langue = detect_language(texte)
+
+        dict = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': langue}
+        return dict
 
 
 def scrap(url, nbmax):
@@ -83,13 +123,13 @@ if __name__ == "__main__":
     print("sujet:", sujet)
     print("date:", date)
 
-    liens = scrap('https://math.univ-angers.fr/~jaclin/biblio/livres/', 10)
-    print(liens)
+    # liens = scrap('https://math.univ-angers.fr/~jaclin/biblio/livres/', 10)
+    # print(liens)
 
     url = 'https://math.univ-angers.fr/~jaclin/biblio/livres/'
     nbmax = 10
     destination_folder = r'D:\COURS\M1\Bibliotheque\Livres'
 
-    scrap_and_download(url, nbmax, destination_folder)
+    print(extract_info_from_pdf(r"D:\COURS\M1\Bibliotheque\Livres\abbot_flatland.pdf"))
 
-
+    # scrap_and_download(url, nbmax, destination_folder)
