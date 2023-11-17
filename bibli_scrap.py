@@ -5,6 +5,7 @@ import os
 import PyPDF2
 from langdetect import detect
 import re
+from pypdf import PdfReader
 
 def detect_language(text):
     try:
@@ -34,7 +35,8 @@ def extract_info_from_pdf(pdf_path):
         lignes = texte.splitlines()
         titre = lignes[2]
         auteur = lignes[1]
-        sujet = ""
+        reader = PdfReader(r"D:\COURS\M1\Bibliotheque\Livres\abbot_flatland.pdf")
+        sujet = reader.metadata["/Comments"]
         date = extract_first_number(lignes[3])
         page = pdf_reader.pages[1]
         texte = page.extract_text()
@@ -129,7 +131,7 @@ if __name__ == "__main__":
     url = 'https://math.univ-angers.fr/~jaclin/biblio/livres/'
     nbmax = 10
     destination_folder = r'D:\COURS\M1\Bibliotheque\Livres'
-
+     #scrap_and_download(url, nbmax, destination_folder)
     print(extract_info_from_pdf(r"D:\COURS\M1\Bibliotheque\Livres\abbot_flatland.pdf"))
 
-    # scrap_and_download(url, nbmax, destination_folder)
+
