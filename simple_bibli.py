@@ -6,13 +6,15 @@ import shutil
 class Simple_bibli(base_bibli):
     def __init__(self, path):
         self.path = path
-        self.livres = []
         try:
+            if not os.path.exists(path):
+                # Crée le dossier si celui-ci n'existe pas
+                self.livres = []
+                os.makedirs(path)
+                print(f"Dossier créé : {path}")
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
             self.livres = fichiers
-        except FileNotFoundError:
-            print(f"Le dossier {path} n'a pas été trouvé.")
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
 
