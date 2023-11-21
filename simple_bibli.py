@@ -2,6 +2,7 @@ from base_blibli import base_bibli
 import os
 import shutil
 
+
 class Simple_bibli(base_bibli):
     def __init__(self, path):
         self.path = path
@@ -14,9 +15,6 @@ class Simple_bibli(base_bibli):
             print(f"Le dossier {path} n'a pas été trouvé.")
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
-
-    def est_dossier_local(self, chemin):
-        return os.path.isdir(chemin)
 
     def ajouter(self, livre):
         try:
@@ -44,8 +42,7 @@ class Simple_bibli(base_bibli):
             return False
 
     def __str__(self):
-        msg=""
+        msg = ""
         for i in self.livres:
-            msg+=i+" "
+            msg += i + " "
         return msg
-
