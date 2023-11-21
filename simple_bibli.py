@@ -1,7 +1,7 @@
 from base_blibli import base_bibli
 import os
 import shutil
-
+from Livre import Livre
 
 class Simple_bibli(base_bibli):
     def __init__(self, path):
@@ -14,7 +14,8 @@ class Simple_bibli(base_bibli):
                 print(f"Dossier créé : {path}")
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
-            self.livres = fichiers
+            for fichier in fichiers:
+                self.livres.append(Livre(fichier))
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
 
@@ -34,7 +35,7 @@ class Simple_bibli(base_bibli):
                 return False
 
             # Ajoute le livre à la liste des livres
-            self.livres.append(os.path.basename(livre.ressource))
+            self.livres.append(livre)
             return True
         except FileNotFoundError:
             print(f"Le fichier {os.path.basename(livre.ressource)} n'a pas été trouvé.")
@@ -44,7 +45,4 @@ class Simple_bibli(base_bibli):
             return False
 
     def __str__(self):
-        msg = ""
-        for i in self.livres:
-            msg += i + " "
-        return msg
+        return ", ".join(str(livre) for livre in self.livres)
