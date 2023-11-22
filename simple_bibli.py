@@ -1,21 +1,28 @@
 from base_blibli import base_bibli
 import os
 import shutil
-from Livre import Livre
+from Livre_EPUB import Livre_EPUB
+from Livre_PDF import Livre_PDF
 
 class Simple_bibli(base_bibli):
     def __init__(self, path):
         self.path = path
+        print(f"Chemin : {path}")
         try:
             if not os.path.exists(path):
                 # Crée le dossier si celui-ci n'existe pas
                 self.livres = []
                 os.makedirs(path)
-                print(f"Dossier créé : {path}")
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
             for fichier in fichiers:
-                self.livres.append(Livre(fichier))
+                print(fichier)
+                if fichier.lower().endswith('.epub'):
+                    self.livres.append(Livre_EPUB(os.path.join(self.path,fichier)))
+                elif fichier.lower().endswith('.pdf'):
+                    book = os.path.join(self.path,fichier)
+                    self.livres.append(Livre_PDF(book))
+
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
 

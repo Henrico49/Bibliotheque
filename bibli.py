@@ -9,6 +9,7 @@ from Livre import Livre
 
 class bibli(Simple_bibli):
     def __init__(self, path):
+        self.livres = []
         super().__init__(path)
 
     def telecharger_livres(self, liens):
@@ -69,7 +70,5 @@ class bibli(Simple_bibli):
 
 
 if __name__ == "__main__":
-    bibli1 = bibli(r"D:\COURS\M1\Bibliotheque\test\alo")
-    print(bibli1)
-    bibli1.alimenter("https://math.univ-angers.fr/~jaclin/biblio/livres/")
-    print(bibli1)
+    bibli1 = bibli("./test")
+    print(bibli1.path)

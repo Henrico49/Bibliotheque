@@ -22,12 +22,13 @@ def extract_first_number(input_string):
     else:
         return None
 
+#TODO: Changer cette méthode qui bug de fou
 def recup_pdf(pdf_path):
     with open(pdf_path, 'rb') as file:
         pdf_reader = PyPDF2.PdfReader(file)
 
         # Récupération des informations
-        reader = PdfReader(r"D:\COURS\M1\Bibliotheque\Livres\abbot_flatland.pdf")
+        reader = PdfReader(pdf_path)
         sujet = reader.metadata["/Comments"] if reader.metadata["/Comments"] else None
         auteur = reader.metadata["/Author"] if reader.metadata["/Author"] else None
         titre = reader.metadata["/Title"] if reader.metadata["/Title"] else None
