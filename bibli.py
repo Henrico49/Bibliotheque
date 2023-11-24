@@ -46,24 +46,24 @@ class bibli(Simple_bibli):
             # Envoie une requête GET à l'URL spécifiée
             response = requests.get(url, verify=False)
             # Vérifie si la requête a réussi (code 200 OK)
-            if response.status_code == 200:
-                # Analyse le contenu HTML de la page
-                soup = BeautifulSoup(response.text, 'html.parser')
+            response.raise_for_status()
 
-                # Récupère tous les liens avec un attribut href
-                liens = soup.find_all('a', href=True)
+            # Analyse le contenu HTML de la page
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-                # Filtrer les liens se terminant par ".epub" ou ".pdf"
-                liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
-                                  lien['href'].lower().endswith(('.epub', '.pdf'))]
-                self.telecharger_livres(liens_epub_pdf)
+            # Récupère tous les liens avec un attribut href
+            liens = soup.find_all('a', href=True)
 
-                return liens_epub_pdf
+            # Filtrer les liens se terminant par ".epub" ou ".pdf"
+            liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
+                              lien['href'].lower().endswith(('.epub', '.pdf'))]
+            self.telecharger_livres(liens_epub_pdf)
 
-            else:
-                print(f"Échec de la requête avec le code d'état : {response.status_code}")
-                return None
+            return liens_epub_pdf
 
+        except requests.exceptions.RequestException as req_err:
+            print(f"Erreur de requête : {req_err}")
+            return None
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return None
