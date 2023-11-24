@@ -50,4 +50,4 @@ class Simple_bibli(base_bibli):
             return False
 
     def __str__(self):
-        return ", ".join(str(livre) for livre in self.livres)
+        return "\n".join(str(livre) for livre in self.livres)

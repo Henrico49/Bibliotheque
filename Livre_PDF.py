@@ -46,3 +46,6 @@ class Livre_PDF(Livre):
 
     def type(self):
         return "PDF"
+
+    def __str__(self):
+        return f"Livre PDF:\n{self.arg}"

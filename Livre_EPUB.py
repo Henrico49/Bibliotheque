@@ -35,3 +35,6 @@ class Livre_EPUB(Livre):
 
     def type(self):
         return "EPUB"
+
+    def __str__(self):
+        return f"Livre EPUB:\n{self.arg}"

@@ -1,5 +1,4 @@
 from base_livre import *
-import json
 
 
 class Livre(base_livre):
@@ -23,6 +22,4 @@ class Livre(base_livre):
         return self.arg["date"]
 
     def __str__(self):
-        # Convertir le dictionnaire en chaîne de caractères JSON
-        donnees_str = json.dumps(self.arg, indent=2)
-        return f"Livre :\n{donnees_str}"
+        return f"Livre :\n{self.arg}"

@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import os
 import shutil
-from Livre import Livre
+from Livre_EPUB import Livre_EPUB
+from Livre_PDF import Livre_PDF
 
 
 class bibli(Simple_bibli):
@@ -33,7 +34,11 @@ class bibli(Simple_bibli):
                     chemin_local = os.path.join(self.path, nom_fichier)
                     with open(chemin_local, 'wb') as fichier_local:
                         shutil.copyfileobj(response.raw, fichier_local)
-                    self.livres.append(Livre(nom_fichier))
+                    if nom_fichier.lower().endswith('.epub'):
+                        self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
+                    elif nom_fichier.lower().endswith('.pdf'):
+                        book = os.path.join(self.path, nom_fichier)
+                        self.livres.append(Livre_PDF(book))
                     print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
                 else:
                     print(f"Échec de la requête avec le code d'état : {response.status_code}")
@@ -67,4 +72,3 @@ class bibli(Simple_bibli):
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return None
-
