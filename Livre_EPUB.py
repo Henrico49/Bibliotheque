@@ -1,7 +1,11 @@
 from Livre import *
 from ebooklib import epub
+import warnings
 
 def recup_EPUB(epub_path):
+    warnings.filterwarnings("ignore", category=UserWarning,
+                            message="In the future version we will turn default option ignore_ncx to True.")
+
     # Récupère le livre
     livre = epub.read_epub(epub_path)
 
