@@ -68,7 +68,3 @@ class bibli(Simple_bibli):
             print(f"Une erreur s'est produite : {e}")
             return None
 
-
-if __name__ == "__main__":
-    bibli1 = bibli("./test")
-    print(bibli1.path)

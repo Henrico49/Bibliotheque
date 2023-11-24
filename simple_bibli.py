@@ -7,7 +7,6 @@ from Livre_PDF import Livre_PDF
 class Simple_bibli(base_bibli):
     def __init__(self, path):
         self.path = path
-        print(f"Chemin : {path}")
         try:
             if not os.path.exists(path):
                 # Crée le dossier si celui-ci n'existe pas
