@@ -1,46 +1,43 @@
 from Livre import *
-import PyPDF2
-from pypdf import PdfReader
+import fitz  # PyMuPDF
 from langdetect import detect
 import re
 
-def detect_language(text):
-    try:
-        language = detect(text)
-        return language
-    except Exception as e:
-        print("Erreur lors de la détection de la langue :", str(e))
-        return None
 
-def extract_first_number(input_string):
-    # Utilise une expression régulière pour trouver le premier nombre
-    match = re.search(r'\b\d+\b', input_string)
+def recup_date_langue(pdf_path, numero_page):
+    with fitz.open(pdf_path) as pdf_document:
+        # Vérifier si le numéro de page est valide
+        if 0 <= numero_page < pdf_document.page_count:
+            # Récupérer la page spécifique
+            page = pdf_document[numero_page]
 
-    # Vérifie si une correspondance a été trouvée
-    if match:
-        return int(match.group())
-    else:
-        return None
+            # Afficher le texte de la page
+            texte_page = page.get_text()
+            # Utilise une expression régulière pour trouver le premier nombre
+            match = re.search(r'\b\d+\b', texte_page)
+
+            # Vérifie si une correspondance a été trouvée
+            if match:
+                date = match.group()
+            else:
+                date = None
+            try:
+                language = detect(texte_page)
+            except Exception as e:
+                print("Erreur lors de la détection de la langue :", str(e))
+                return None
+            return date, language
+
 
 def recup_pdf(pdf_path):
-    with open(pdf_path, 'rb') as file:
-        pdf_reader = PyPDF2.PdfReader(file)
+    with fitz.open(pdf_path) as pdf_document:
+        sujet = pdf_document.metadata.get("subject", None)
+        auteur = pdf_document.metadata.get("author", None)
+        titre = pdf_document.metadata.get("title", None)
+        date, language = recup_date_langue(pdf_path, 0)
+        dict_resultat = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': language}
+        return dict_resultat
 
-        # Récupération des informations
-        reader = PdfReader(r"D:\COURS\M1\Bibliotheque\Livres\abbot_flatland.pdf")
-        sujet = reader.metadata["/Comments"] if reader.metadata["/Comments"] else None
-        auteur = reader.metadata["/Author"] if reader.metadata["/Author"] else None
-        titre = reader.metadata["/Title"] if reader.metadata["/Title"] else None
-        page = pdf_reader.pages[0]
-        texte = page.extract_text()
-        lignes = texte.splitlines()
-        date = extract_first_number(lignes[3])
-        page = pdf_reader.pages[1]
-        texte = page.extract_text()
-        langue = detect_language(texte)
-
-        dict = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': langue}
-        return dict
 
 class Livre_PDF(Livre):
     def __init__(self, ressource):
