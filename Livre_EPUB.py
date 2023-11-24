@@ -1,6 +1,7 @@
 from Livre import *
 from ebooklib import epub
 
+
 def recup_EPUB(epub_path):
     # Récupère le livre
     livre = epub.read_epub(epub_path)
@@ -19,7 +20,7 @@ def recup_EPUB(epub_path):
 
     # Récupère l'auteur du livre
     auteur = ", ".join(author[0] for author in livre.get_metadata('DC', 'creator')) if livre.get_metadata('DC',
-                                                                                                             'creator') else None
+                                                                                                          'creator') else None
     dict = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': language}
     return dict
 

@@ -67,4 +67,3 @@ class bibli(Simple_bibli):
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return None
-
