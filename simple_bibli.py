@@ -15,7 +15,6 @@ class Simple_bibli(base_bibli):
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
             for fichier in fichiers:
-                print(fichier)
                 if fichier.lower().endswith('.epub'):
                     self.livres.append(Livre_EPUB(os.path.join(self.path,fichier)))
                 elif fichier.lower().endswith('.pdf'):
