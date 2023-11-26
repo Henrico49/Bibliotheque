@@ -7,7 +7,7 @@ import shutil
 from Livre_EPUB import Livre_EPUB
 from Livre_PDF import Livre_PDF
 
-def liens_pdf_epub(url):
+def recup_liens_livres(url):
     # Envoie une requête GET à l'URL spécifiée
     response = requests.get(url, verify=False)
     # Vérifie si la requête a réussi (code 200 OK)
@@ -21,7 +21,7 @@ def liens_pdf_epub(url):
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if
                       lien.get('href').lower().endswith(('.epub', '.pdf'))]
     return liens_filtres
-def recup_liens(url):  #  récupère tous les liens sauf ceux pdf et epub
+def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et epub
     # Envoie une requête GET à l'URL spécifiée
     response = requests.get(url, verify=False)
     # Vérifie si la requête a réussi (code 200 OK)
@@ -32,6 +32,7 @@ def recup_liens(url):  #  récupère tous les liens sauf ceux pdf et epub
 
     # Récupère tous les liens avec un attribut href
     liens = soup.find_all('a', href=True)
+    # tous les liens "externes", qui ne sont pas des documents
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if not
                      lien.get('href').lower().endswith(('.epub', '.pdf'))]
     return liens_filtres
@@ -66,13 +67,39 @@ class bibli_scrap(bibli):
                         book = os.path.join(self.path, nom_fichier)
                         self.livres.append(Livre_PDF(book))
                     print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
+                    return True
                 else:
                     print(f"Échec de la requête avec le code d'état : {response.status_code}")
         except Exception as e:
             print(f"Une erreur s'est produite lors du téléchargement du livre {lien} : {e}")
 
-
+    def _scrap(self, url, nbmax):
+        liens_livres = recup_liens_livres(url)
+        nblivres = 0  # compte le nombre de livres effectivement téléchargés
+        for lien_livre in liens_livres:
+            if self.telecharger_livres(lien_livre):
+                nblivres += 1
+            if nblivres >= nbmax:
+                break
     def scrap(self, url, profondeur, nbmax):
+        if profondeur > 0 and nbmax > 0:
+            nbinitial = len(self.livres)
+            self._scrap(url, nbmax)
+            liens_externes = recup_liens_externes(url)
+            i = 0
+            while len(self.livres) - nbinitial > nbmax and i < len(liens_externes):
+                self.scrap(liens_externes[i],profondeur-1, len(self.livres) - nbinitial)
+                i += 1
+
+        elif nbmax == 0:
+            print("Nombre maximal de livres atteint.")
+        else:
+            print("Profondeur maximale atteinte.")
+
+
+
+
+
 
 
 
