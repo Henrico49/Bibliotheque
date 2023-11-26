@@ -46,6 +46,8 @@ class bibli_scrap(bibli):
         try:
             # Vérifie si le livre est déjà présent
             nom_fichier = os.path.basename(lien)
+            print(nom_fichier)
+            print(nom_fichier in self.livres)
             if nom_fichier in self.livres:
                 print(f"Le livre {nom_fichier} est déjà présent.")
             else:
@@ -56,7 +58,6 @@ class bibli_scrap(bibli):
                 if response.status_code == 200:
                     # Récupère le nom du fichier depuis l'URL
                     nom_fichier = os.path.basename(lien)
-
                     # Enregistre le fichier dans le dossier local
                     chemin_local = os.path.join(self.path, nom_fichier)
                     with open(chemin_local, 'wb') as fichier_local:
@@ -77,7 +78,7 @@ class bibli_scrap(bibli):
         liens_livres = recup_liens_livres(url)
         nblivres = 0  # compte le nombre de livres effectivement téléchargés
         for lien_livre in liens_livres:
-            if self.telecharger_livres(lien_livre):
+            if self.telecharger(lien_livre):
                 nblivres += 1
             if nblivres >= nbmax:
                 break
