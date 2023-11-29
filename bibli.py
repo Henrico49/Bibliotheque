@@ -13,35 +13,34 @@ class bibli(Simple_bibli):
         self.livres = []
         super().__init__(path)
 
-    def telecharger_livres(self, liens):
-        for lien in liens:
+    def telecharger(self, lien):
             try:
                 # Vérifie si le livre est déjà présent
                 nom_fichier = os.path.basename(lien)
                 if nom_fichier in self.livres:
                     print(f"Le livre {nom_fichier} est déjà présent.")
-                    continue  # Passe au lien suivant
-
-                # Envoie une requête GET pour récupérer le contenu du fichier
-                response = requests.get(lien, stream=True, verify=False)
-
-                # Vérifie si la requête a réussi (code 200 OK)
-                if response.status_code == 200:
-                    # Récupère le nom du fichier depuis l'URL
-                    nom_fichier = os.path.basename(lien)
-
-                    # Enregistre le fichier dans le dossier local
-                    chemin_local = os.path.join(self.path, nom_fichier)
-                    with open(chemin_local, 'wb') as fichier_local:
-                        shutil.copyfileobj(response.raw, fichier_local)
-                    if nom_fichier.lower().endswith('.epub'):
-                        self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
-                    elif nom_fichier.lower().endswith('.pdf'):
-                        book = os.path.join(self.path, nom_fichier)
-                        self.livres.append(Livre_PDF(book))
-                    print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
                 else:
-                    print(f"Échec de la requête avec le code d'état : {response.status_code}")
+                    # Envoie une requête GET pour récupérer le contenu du fichier
+                    response = requests.get(lien, stream=True, verify=False)
+
+                    # Vérifie si la requête a réussi (code 200 OK)
+                    if response.status_code == 200:
+                        # Récupère le nom du fichier depuis l'URL
+                        nom_fichier = os.path.basename(lien)
+                        # Enregistre le fichier dans le dossier local
+                        chemin_local = os.path.join(self.path, nom_fichier)
+                        with open(chemin_local, 'wb') as fichier_local:
+                            shutil.copyfileobj(response.raw, fichier_local)
+                        if nom_fichier.lower().endswith('.epub'):
+                            self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
+                        elif nom_fichier.lower().endswith('.pdf'):
+                            book = os.path.join(self.path, nom_fichier)
+                            self.livres.append(Livre_PDF(book))
+                        print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
+                        return True
+                    else:
+                        print(f"Échec de la requête avec le code d'état : {response.status_code}")
+                        return False
 
             except Exception as e:
                 print(f"Une erreur s'est produite lors du téléchargement du livre {lien} : {e}")
@@ -62,7 +61,8 @@ class bibli(Simple_bibli):
             # Filtrer les liens se terminant par ".epub" ou ".pdf"
             liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
                               lien['href'].lower().endswith(('.epub', '.pdf'))]
-            self.telecharger_livres(liens_epub_pdf)
+            for lien in liens_epub_pdf:
+                self.telecharger(lien)
 
             return liens_epub_pdf
 
