@@ -1,5 +1,5 @@
 from Livre import *
-from fonction_fichiers import *
+from fonctions_fichier import *
 
 class Livre_PDF(Livre):
     def __init__(self, ressource):
