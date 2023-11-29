@@ -1,9 +1,17 @@
 from base_livre import *
+from fonction_fichiers import *
+
 
 
 class Livre(base_livre):
     def __init__(self, ressource):
-        self.ressource = ressource
+        if os.path.exists(ressource):
+            self.ressource = ressource
+        # Vérifier si la chaîne ressemble à un lien Internet
+        elif ressource.startswith(("http://", "https://", "ftp://")):
+                self.ressource = telecharger(ressource)
+        else:
+            raise FileNotFoundError(f"Le fichier {ressource} n'a pas été trouvé.")
         self.arg = {}  # dictionnaire
 
     def titre(self):
