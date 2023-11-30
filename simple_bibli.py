@@ -7,10 +7,10 @@ from Livre_PDF import Livre_PDF
 class Simple_bibli(base_bibli):
     def __init__(self, path):
         self.path = path
+        self.livres = []
         try:
             if not os.path.exists(path):
                 # Crée le dossier si celui-ci n'existe pas
-                self.livres = []
                 os.makedirs(path)
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
