@@ -31,11 +31,12 @@ class bibli(Simple_bibli):
                         chemin_local = os.path.join(self.path, nom_fichier)
                         with open(chemin_local, 'wb') as fichier_local:
                             shutil.copyfileobj(response.raw, fichier_local)
-                        if nom_fichier.lower().endswith('.epub'):
-                            self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
-                        elif nom_fichier.lower().endswith('.pdf'):
-                            book = os.path.join(self.path, nom_fichier)
-                            self.livres.append(Livre_PDF(book))
+                        extension = os.path.splitext(nom_fichier)[1].lower()
+                        match extension:
+                            case '.epub':
+                                self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
+                            case '.pdf':
+                                self.livres.append(Livre_PDF(os.path.join(self.path, nom_fichier)))
                         print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
                         return True
                     else:
