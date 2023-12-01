@@ -37,6 +37,8 @@ class bibli(Simple_bibli):
                                 self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
                             case '.pdf':
                                 self.livres.append(Livre_PDF(os.path.join(self.path, nom_fichier)))
+                            case _:
+                                raise Exception("Extension pas prise en compte")
                         print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")
                         return True
                     else:
