@@ -57,3 +57,16 @@ class Simple_bibli(base_bibli):
     def ajoute_auteur(self,livre):
         if livre.auteur() not in self.auteurs:
             self.auteurs.append(livre.auteur())
+
+    def rapport_livres(self, format, fichier='rapport'):
+        match format:
+            case 'PDF':
+                rapport = open("rapport_livres.txt",'w')
+                for livre in self.livres:
+                    rapport.write(livre.__str__()+"\n")
+                rapport.close()
+
+
+
+
+
