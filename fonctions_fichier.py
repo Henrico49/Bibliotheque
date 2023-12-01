@@ -12,6 +12,7 @@ import configparser
 from urllib.parse import urlparse
 import sys
 
+
 def telecharger(lien):
     try:
         # Envoie une requête GET pour récupérer le contenu du fichier
