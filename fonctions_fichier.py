@@ -12,7 +12,7 @@ import configparser
 from urllib.parse import urlparse
 import sys
 
-
+extensions = ('.pdf', '.epub')
 def telecharger(lien):
     try:
         # Envoie une requête GET pour récupérer le contenu du fichier
@@ -107,7 +107,7 @@ def recup_liens_livres(url):
     # Récupère tous les liens avec un attribut href
     liens = soup.find_all('a', href=True)
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if
-                      lien.get('href').lower().endswith(('.epub', '.pdf'))]
+                      lien.get('href').lower().endswith(extensions)]
     return liens_filtres
 
 def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et epub
@@ -123,7 +123,7 @@ def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et ep
     liens = soup.find_all('a', href=True)
     # tous les liens "externes", qui ne sont pas des documents
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if not
-                     lien.get('href').lower().endswith(('.epub', '.pdf', '.zip')) and '?' not in lien.get('href')]
+                     lien.get('href').lower().endswith(extensions + ('.zip',)) and est_url_valide(urljoin(url, lien.get('href')))]
     return liens_filtres
 
 def est_lien_web(chaine):
@@ -161,3 +161,6 @@ def config_defaut():
     print(f"Chemin des états : {chemin_etats}")
     print(f"Nombre maximum de livres : {nb_max}")
     return chemin_bibliotheque, chemin_etats, nb_max
+
+
+print(recup_liens_externes("https://math.univ-angers.fr/~jaclin/biblio/livres/epinal/"))
