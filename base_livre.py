@@ -5,7 +5,8 @@ class base_livre:
         soit une URL pointant vers un livre.
     """
     raise NotImplementedError("à définir dans les sous-classes")
-
+  def recup(self):
+    raise NotImplementedError("à définir dans les sous-classes")
   def type(self):
     """ renvoie le type (EPUB, PDF, ou autre) du livre """
     raise NotImplementedError("à définir dans les sous-classes")
@@ -29,5 +30,3 @@ class base_livre:
   def date(self):
     """ renvoie la date de publication du livre """
     raise NotImplementedError("à définir dans les sous-classes")
-
-class livre2:
