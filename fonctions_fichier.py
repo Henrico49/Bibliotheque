@@ -8,9 +8,6 @@ from ebooklib import epub
 import warnings
 import os
 import shutil
-import configparser
-from urllib.parse import urlparse
-import sys
 
 def telecharger(lien):
     try:
@@ -124,26 +121,3 @@ def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et ep
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if not
                      lien.get('href').lower().endswith(('.epub', '.pdf'))]
     return liens_filtres
-
-def est_lien_web(chaine):
-    try:
-        result = urlparse(chaine)
-        return all([result.scheme, result.netloc])
-    except ValueError:
-        return False
-
-def lire_config(chemin_fichier):
-    config = configparser.ConfigParser()
-    config.read(chemin_fichier)
-    return config
-
-def config_defaut():
-    config = lire_config(sys.argv[2])
-    chemin_bibliotheque = config.get('Bibliotheque', 'bibliotheque')
-    chemin_etats = config.get('Bibliotheque', 'etats')
-    nb_max = config.getint('Bibliotheque', 'nbmax')
-    print(f"Vous avez executer le programme avec le fichier de configuration : {sys.argv[2]}")
-    print(f"Chemin de la bibliothèque : {chemin_bibliotheque}")
-    print(f"Chemin des états : {chemin_etats}")
-    print(f"Nombre maximum de livres : {nb_max}")
-    return chemin_bibliotheque, chemin_etats, nb_max
