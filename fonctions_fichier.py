@@ -133,6 +133,19 @@ def est_lien_web(chaine):
     except ValueError:
         return False
 
+def est_url_valide(url):
+    # Vérifier si la chaîne est une URL valide
+    try:
+        parsed_url = urlparse(url)
+        if parsed_url.scheme and parsed_url.netloc:
+            # Vérifier s'il n'y a pas de paramètres dans la requête
+            if not parsed_url.query:
+                return True
+    except ValueError:
+        pass
+
+    return False
+
 def lire_config(chemin_fichier):
     config = configparser.ConfigParser()
     config.read(chemin_fichier)
