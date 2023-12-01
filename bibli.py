@@ -34,9 +34,13 @@ class bibli(Simple_bibli):
                         extension = os.path.splitext(nom_fichier)[1].lower()
                         match extension:
                             case '.epub':
-                                self.livres.append(Livre_EPUB(os.path.join(self.path, nom_fichier)))
+                                livre = Livre_EPUB(os.path.join(self.path, nom_fichier))
+                                self.livres.append(livre)
+                                self.ajoute_auteur(livre)
                             case '.pdf':
-                                self.livres.append(Livre_PDF(os.path.join(self.path, nom_fichier)))
+                                livre = Livre_PDF(os.path.join(self.path, nom_fichier))
+                                self.livres.append(livre)
+                                self.ajoute_auteur(livre)
                             case _:
                                 raise Exception("Extension pas prise en compte")
                         print(f"Le livre {nom_fichier} a été téléchargé et enregistré.")

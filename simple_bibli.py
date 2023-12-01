@@ -8,6 +8,7 @@ class Simple_bibli(base_bibli):
     def __init__(self, path="Default"):
         self.path = path
         self.livres = []
+        self.auteurs = []
         try:
             if not os.path.exists(path):
                 # Crée le dossier si celui-ci n'existe pas
@@ -52,3 +53,7 @@ class Simple_bibli(base_bibli):
             return False
     def __str__(self):
         return "\n".join(str(livre) for livre in self.livres)
+
+    def ajoute_auteur(self,livre):
+        if livre.auteur() not in self.auteurs:
+            self.auteurs.append(livre.auteur())

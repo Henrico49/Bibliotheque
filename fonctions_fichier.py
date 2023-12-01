@@ -161,6 +161,3 @@ def config_defaut():
     print(f"Chemin des états : {chemin_etats}")
     print(f"Nombre maximum de livres : {nb_max}")
     return chemin_bibliotheque, chemin_etats, nb_max
-
-
-print(recup_liens_externes("https://math.univ-angers.fr/~jaclin/biblio/livres/epinal/"))
