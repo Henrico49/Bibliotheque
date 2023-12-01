@@ -5,12 +5,14 @@ from Livre_EPUB import Livre_EPUB
 from Livre_PDF import Livre_PDF
 
 class Simple_bibli(base_bibli):
-    def __init__(self, path):
+    def __init__(self, path="Default"):
         self.path = path
         self.livres = []
         try:
             if not os.path.exists(path):
                 # Crée le dossier si celui-ci n'existe pas
+                print(f"Le dossier {path} n'existe pas.")
+                print(f"Création du dossier {path}.")
                 os.makedirs(path)
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)

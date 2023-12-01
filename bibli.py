@@ -9,7 +9,7 @@ from Livre_PDF import Livre_PDF
 
 
 class bibli(Simple_bibli):
-    def __init__(self, path):
+    def __init__(self, path="Default"):
         self.livres = []
         super().__init__(path)
 
@@ -45,7 +45,7 @@ class bibli(Simple_bibli):
             except Exception as e:
                 print(f"Une erreur s'est produite lors du téléchargement du livre {lien} : {e}")
 
-    def alimenter(self, url):
+    def alimenter(self, url, nbmax=10):
         try:
             # Envoie une requête GET à l'URL spécifiée
             response = requests.get(url, verify=False)
@@ -61,7 +61,10 @@ class bibli(Simple_bibli):
             # Filtrer les liens se terminant par ".epub" ou ".pdf"
             liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
                               lien['href'].lower().endswith(('.epub', '.pdf'))]
+
             for lien in liens_epub_pdf:
+                if len(self.livres) >= nbmax:
+                    break
                 self.telecharger(lien)
 
             return liens_epub_pdf
