@@ -50,6 +50,5 @@ class Simple_bibli(base_bibli):
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return False
-
     def __str__(self):
         return "\n".join(str(livre) for livre in self.livres)
