@@ -22,8 +22,10 @@ match n:
             exit(1)
         elif sys.argv[1]=="rapports":
             b1 = Simple_bibli()
-            b1.rapport_livres()
-            b1.rapport_auteurs()
+            b1.rapport_livres("PDF")
+            b1.rapport_livres("EPUB")
+            b1.rapport_auteurs("PDF")
+            b1.rapport_auteurs("EPUB")
         elif est_lien_web(sys.argv[1]):
             b1 = bibli()
             b1.alimenter(sys.argv[1])
@@ -51,8 +53,10 @@ match n:
                 exit(1)
             if sys.argv[3]=="rapports":
                 b1 = Simple_bibli(chemin_bibliotheque)
-                b1.rapport_livres()
-                b1.rapport_auteurs()
+                b1.rapport_livres("PDF", chemin_etats)
+                b1.rapport_livres("EPUB", chemin_etats)
+                b1.rapport_auteurs("PDF", chemin_etats)
+                b1.rapport_auteurs("EPUB", chemin_etats)
             elif est_lien_web(sys.argv[3]):
                 b1 = bibli(chemin_bibliotheque)
                 b1.alimenter(sys.argv[3])
