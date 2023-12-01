@@ -17,18 +17,23 @@ class bibli_scrap(bibli):
                 break
 
     def scrap(self, url, profondeur, nbmax):
-        if profondeur > 0 and nbmax > 0:
+        if profondeur >= 0 and nbmax > 0:
             nbinitial = len(self.livres)
             self._scrap(url, nbmax)
-            liens_externes = recup_liens_externes(url)
-            i = 0
-            while len(self.livres) - nbinitial > nbmax and i < len(liens_externes):
-                self.scrap(liens_externes[i], profondeur - 1, len(self.livres) - nbinitial)
-                i += 1
+            if profondeur >= 1:
+                liens_externes = recup_liens_externes(url)
+                i = 0
+                while len(self.livres) - nbinitial <= nbmax and i < len(liens_externes):
+                    try:
+                        self.scrap(liens_externes[i], profondeur - 1, nbmax - (len(self.livres) - nbinitial))
+                        i += 1
+                    except Exception as e:
+                        i += 1
+                        print(e)
 
         elif nbmax == 0:
-            print("Nombre maximal de livres atteint.")
-        else:
-            print("Profondeur maximale atteinte.")
-
-
+            print("Nombre maximal de livre téléchargés.")
+        elif nbmax < 0:
+            raise ValueError("Le nombre maximal de livres doit être un entier positif.")
+        elif profondeur < 0:
+            raise ValueError("La profondeur doit être un entier positif.")
