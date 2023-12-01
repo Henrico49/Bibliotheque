@@ -122,7 +122,7 @@ def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et ep
     liens = soup.find_all('a', href=True)
     # tous les liens "externes", qui ne sont pas des documents
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if not
-                     lien.get('href').lower().endswith(('.epub', '.pdf'))]
+                     lien.get('href').lower().endswith(('.epub', '.pdf', '.zip')) and '?' not in lien.get('href')]
     return liens_filtres
 
 def est_lien_web(chaine):
