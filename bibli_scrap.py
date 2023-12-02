@@ -20,11 +20,13 @@ class bibli_scrap(bibli):
         if profondeur >= 0 and nbmax > 0:
             nbinitial = len(self.livres)
             self._scrap(url, nbmax)
-            if profondeur >= 1:
+            if profondeur >= 1:  # si la profondeur est supérieure à 1 on regarde les liens vers d'autres sites
                 liens_externes = recup_liens_externes(url)
                 i = 0
                 while len(self.livres) - nbinitial <= nbmax and i < len(liens_externes):
                     try:
+                        # on appelle récursivement la fonction scrap avec profondeur -1
+                        #et le nbmax - le nombre de livres téléchargés avant l'appel
                         self.scrap(liens_externes[i], profondeur - 1, nbmax - (len(self.livres) - nbinitial))
                         i += 1
                     except Exception as e:

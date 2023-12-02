@@ -11,7 +11,7 @@ import shutil
 import configparser
 from urllib.parse import urlparse
 import sys
-
+# pour rajouter un format de fichier, ajoutez l'extension au tuple:
 extensions = ('.pdf', '.epub')
 def telecharger(lien):
     try:
@@ -60,7 +60,7 @@ def recup_date_langue(pdf_path, numero_page):
                 print("Erreur lors de la détection de la langue :", str(e))
                 return date, "pas de langue détectée"
             return date, language
-
+# pour un nouveau format de fichier, ajoutez une fonction de récuperation adaptée:
 def recup_pdf(pdf_path):
     with fitz.open(pdf_path) as pdf_document:
         sujet = pdf_document.metadata.get("subject", None)
@@ -133,6 +133,8 @@ def est_lien_web(chaine):
     except ValueError:
         return False
 
+# cette fonction permet de verifier qu'un lien dirige bien vers une page web différente
+# et pas seulement vers la même page paramétrée différement
 def est_url_valide(url):
     # Vérifier si la chaîne est une URL valide
     try:

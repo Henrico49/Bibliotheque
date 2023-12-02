@@ -30,7 +30,7 @@ class Livre(base_livre):
         return self.arg["date"]
 
     def __str__(self):
-        return f"Livre :\n{self.arg}"
+        return f"Livre :\n {self.arg}"
 
     def __eq__(self, other):
         if type(other).__name__ != type(self).__name__:
