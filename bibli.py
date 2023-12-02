@@ -5,14 +5,14 @@ from fonctions_fichier import *
 
 class bibli(Simple_bibli):
     def __init__(self, path="Default"):
-        self.livres = []
+        self.livres = []  # inutile ?
         super().__init__(path)
 
     def telecharger(self, lien):
             try:
                 # Vérifie si le livre est déjà présent
                 nom_fichier = os.path.basename(lien)
-                if nom_fichier in self.livres:  # attention
+                if nom_fichier in self.livres:  # attention ca marche pas ?
                     print(f"Le livre {nom_fichier} est déjà présent.")
                 else:
                     # Envoie une requête GET pour récupérer le contenu du fichier
