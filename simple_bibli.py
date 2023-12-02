@@ -3,6 +3,7 @@ import os
 import shutil
 from Livre_EPUB import Livre_EPUB
 from Livre_PDF import Livre_PDF
+from fonctions_fichier import *
 
 class Simple_bibli(base_bibli):
     def __init__(self, path="Default"):

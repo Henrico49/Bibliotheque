@@ -40,5 +40,12 @@ pouvoir facilement ajouter d’autres formats.
  page web à partir d'un url.
 * La fonction *scrap* de la classe *bibli_scrap*.
 
-
+## Utilisation
+### 1. Classe: *simple_blibli*
+* La classe *simple_blibli* permet de créer une bibiliothèque à partir de livres stockés sur l'ordinateur.
+Elle s'utilise comme suit :
+    * Création de la bibliothèque avec le chemin d'accès du dossier qui sera utilisé pour stocker les livres.
+        S'il n'existe pas il est créé et s'il n'est pas renseigné un dossier *défaut* sera créé.
+    * On y ajoute des livres en utilisant la fonction *ajouter(self, livre)* qui prend en paramètre obligatoire, le
+        chemin d'accès du livre que l'on veut ajouter au dossier.
 
