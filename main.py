@@ -5,6 +5,7 @@ from bibli_scrap import bibli_scrap
 
 
 n = len(sys.argv)
+print(n)
 match n:
 
     case 1:

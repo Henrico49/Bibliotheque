@@ -45,28 +45,13 @@ class bibli(Simple_bibli):
 
     def alimenter(self, url, nbmax=10):
         try:
-            # Envoie une requête GET à l'URL spécifiée
-            response = requests.get(url, verify=False)
-            # Vérifie si la requête a réussi (code 200 OK)
-            response.raise_for_status()
-
-            # Analyse le contenu HTML de la page
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            # Récupère tous les liens avec un attribut href
-            liens = soup.find_all('a', href=True)
-
-            # Filtrer les liens se terminant par ".epub" ou ".pdf"
-            liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
-                              lien['href'].lower().endswith(('.epub', '.pdf'))]
-
-            # Télécharge les livres
-            for lien in liens_epub_pdf:
-                if len(self.livres) >= nbmax:
+            liens_livres = recup_liens_livres(url)
+            nblivres = 0  # compte le nombre de livres effectivement téléchargés
+            for lien_livre in liens_livres:
+                if self.telecharger(lien_livre):
+                    nblivres += 1
+                if nblivres >= nbmax:
                     break
-                self.telecharger(lien)
-
-            return liens_epub_pdf
 
         except requests.exceptions.RequestException as req_err:
             print(f"Erreur de requête : {req_err}")
@@ -74,7 +59,3 @@ class bibli(Simple_bibli):
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return None
-
-B1 = bibli("biblio")
-B1.alimenter("https://math.univ-angers.fr/~jaclin/biblio/livres/", 10)
-print(B1)
