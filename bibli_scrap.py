@@ -8,7 +8,7 @@ class bibli_scrap(bibli):
 
 
 
-    def scrap(self, url, profondeur, nbmax=10):
+    def scrap(self, url, profondeur=0, nbmax=10):
         if profondeur >= 0 and nbmax > 0:
             nbinitial = len(self.livres)
             self.alimenter(url, nbmax)

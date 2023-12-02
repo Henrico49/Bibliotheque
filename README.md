@@ -20,38 +20,84 @@ pouvoir facilement ajouter d’autres formats.
 
 ### 1. Créations et implémentations des différentes classes.
 
-* Création de la classe *Livre* dont les différents types de livres (PDF, EPUB...)
+* Création de la classe `Livre` dont les différents types de livres (PDF, EPUB...)
   hériteront par la suite. Ainsi pour ajouter un nouveau format de livre. Il
-  suffira de créer une nouvelle sous-classe de *Livre* et
+  suffira de créer une nouvelle sous-classe de `Livre` et
   seulement d'implémenter la fonction de récupération correspondante
   à ce type de fichier. 
-* Créations des classes *Livres_PDF* et *Livres_EPUB* comme expliqué précédemment.
+* Créations des classes `Livres_PDF` et *`Livres_EPUB` comme expliqué précédemment.
   À ce stade les fonctions de récupération ne sont
   pas encore implémentées.
-* Créations des classes *bibli*, *simple_bibli* et *bibli_scrap*.
+* Créations des classes `bibli`, `simple_bibli` et `bibli_scrap`.
 
 ### 2. Implémentations des fonctions
-* Les fonctions *recup_pdf* et *recup_epub* sont définies de manière
+* Les fonctions `recup_pdf `et `recup_epub` sont définies de manière
   à renvoyer un dictionnaire des métadonnées (titre, auteur, langue, sujet et date) du fichier en utilisant
  les modules nécessaires.
-* La fonction *ajoute* de la classe *simple_blibli*, ajoute un livre
+* La fonction `ajouter` de la classe `simple_blibli`, ajoute un livre
  à partir d'un chemin d'accès.
-* La fonction *alimenter* de la classe *bibli*, télécharge tous les livres d'une 
+* La fonction `alimenter` de la classe `bibli`, télécharge tous les livres d'une 
  page web à partir d'un url.
-* La fonction *scrap* de la classe *bibli_scrap*.
+* La fonction `scrap` de la classe `bibli_scrap`.
 
 ## Utilisation
-### 1. Classe : *simple_blibli*
-La classe *simple_blibli* hérite de *base_bibli* permet de créer une bibiliothèque à partir de livres stockés sur l'ordinateur.
+### 1. Modules nécessaires
+Pour utiliser le programme, il faut installer les modules suivants :
+* `requests` pour accéder aux pages web.
+* `bs4` from `beautifulsoup4` pour analyser les pages web.
+* `urllib3` pour extraire les liens des pages web.
+* `fitz` from `PyMuPDF` pour extraire les métadonnées des fichiers PDF.
+* `detect` from `langdetect` pour détecter la langue du fichier.
+* `re` 
+* `epub` from `ebooklib` pour extraire les métadonnées des fichiers EPUB.
+* `warnings` pour gérer les avertissements.
+* `os` pour gérer les fichiers et dossiers.
+* `shutil` 
+* `configparser`
+* `sys`
+
+Vous pouvez les installer en utilisant la commande suivante :
+
+### 2. Classe : `simple_blibli`
+La classe `simple_bibli` hérite de `base_bibli` permet de créer une bibiliothèque à partir de livres stockés sur l'ordinateur.
 Elle s'utilise comme suit :
 * Création de la bibliothèque avec le chemin d'accès du dossier qui sera utilisé pour stocker les livres.
         S'il n'existe pas il est créé et s'il n'est pas renseigné un dossier *défaut* sera créé.
-* On y ajoute des livres en utilisant la fonction *ajouter(self, livre)* qui prend en paramètre obligatoire, le
+* On y ajoute des livres en utilisant la fonction `ajouter(self, livre)` qui prend en paramètre obligatoire, le
     chemin d'accès du livre que l'on veut ajouter au dossier.
 
-### 2. Classe : *bibli*
+### 3. Classe : `bibli`
 La classe `bibli` hérite de `simple_bibli` et permet en plus d'alimenter la bibliothèque avec des livres téléchargés sur internet. Elle s'utilise comme suit : 
 * On crée la bibliothèque de la même manière que `simple_blibli`.
-* `telecharger(self, url, nbmax)`
+* `telecharger(self, url)` : télécharge le livre de l'url donné et l'ajoute à la bibliothèque.
+* `alimenter(self, url, nbmax=10)` : télécharge les livres présent dans la page web correspondant à l'url donné, au maximum *nbmax*.
+
+### 4. Classe : `bibli_scrap`
+La classe `bibli_scrap` hérite de `bibli` et permet en plus de récupérer les livres d'une page web à partir d'un web scrapping. Elle s'utilise comme suit :
+* On crée la bibliothèque de la même manière que `bibli`.
+* `scrap(self, url, profondeur=0, nbmax=10)` récupère les livres de la page web correspondant à l'url donné, au maximum *nbmax*.
+ Si *nbmax* n'est pas atteint et que *profondeur* est supérieur à 0, on récupère les livres des pages web récupérés sur la page web de l'*url* donné.
+On effectura cette opération au maximum *profondeur* fois.
+
+### 5. Fichier : `fonctions_fichier.py`
+Ce fichier contient les fonctions permettant de récupérer les métadonnées des fichiers PDF et EPUB. Il contient aussi les fonctions permettant de récupérer les livres d'une page web.
+*  `extensions` : tuple contenant les extensions des fichiers supportés.
+* `telecharger(lien)` : télécharge le livre de l'url donné et l'enregistre dans le dossier *telechargements*.
+* `recup_date_langue(pdf_path, numero_page)` : récupère la date et la langue du livre PDF à partir du chemin d'accès du livre et du numéro de la page.
+* `recup_pdf(pdf_path)` : récupère les métadonnées du livre PDF à partir du chemin d'accès du livre.
+* `recup_EPUB(epub_path)` : récupère les métadonnées du livre EPUB à partir du chemin d'accès du livre.
+* `recup_liens_livres(url)` : récupère les liens des livres d'une page web à partir de l'url de la page web.
+* `recup_liens_externes(url)` : récupère les liens des pages web externes à partir de l'url de la page web.
+* `est_lien_web(chaine)` : vérifie si la chaîne de caractère est un lien web.
+* `est_url_valide(url)` : vérifie si l'url est valide, à savoir s'il dirige effectivement vers une page web différente.
+
+## Ajout d'un nouveau format de livre
+Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
+Pour ajouter un nouveau format de livre, il faut :
+* Importer les modules nécessaires pour gérer le nouveau format de livre.
+* Pour ajouter un nouveau format de livre, il faut créer une nouvelle classe héritant de la classe `Livre`.
+* Implémenter la fonction `recup_format(self, path)` dans `fonctions_fichier.py` qui permet de récupérer les métadonnées du livre à partir du chemin d'accès du livre.
+* Rajouter un élément dans le tuple `extensions` dans `fonctions_fichier.py` contenant l'extension du nouveau format de livre.
+* Ajouter un `case '.format'` dans la fonction `telecharger` de `bibli` et dans le constructeur de `simple_bibli`.
 
 

@@ -22,15 +22,15 @@ warnings.filterwarnings("ignore", category=UserWarning,
 
 
 # pour créer un livre avec un url
-def telecharger(lien):
+def telecharger(url):
     try:
         # Envoie une requête GET pour récupérer le contenu du fichier
-        response = requests.get(lien, stream=True, verify=False)
+        response = requests.get(url, stream=True, verify=False)
 
         # Vérifie si la requête a réussi (code 200 OK)
         if response.status_code == 200:
             # Récupère le nom du fichier depuis l'URL
-            nom_fichier = os.path.basename(lien)
+            nom_fichier = os.path.basename(url)
             repertoire_telechargements = os.getcwd() + "/telechargements"
             # Vérifie si le répertoire de téléchargement existe, sinon le crée
             if not os.path.exists(repertoire_telechargements):
@@ -45,7 +45,7 @@ def telecharger(lien):
         raise Exception(f"Échec de la requête avec le code d'état : {response.status_code}")
 
     except Exception as e:
-        print(f"Une erreur s'est produite lors du téléchargement du livre {lien} : {e}")
+        print(f"Une erreur s'est produite lors du téléchargement du livre {url} : {e}")
 
 
 def recup_date_langue(pdf_path, numero_page):
