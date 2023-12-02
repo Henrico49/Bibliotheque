@@ -1,19 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 import fitz
 from langdetect import detect
 import re
 from ebooklib import epub
 import warnings
+import urllib3
 import os
 import shutil
 import configparser
-from urllib.parse import urlparse
 import sys
 
 # pour rajouter un format de fichier, ajoutez l'extension au tuple:
 extensions = ('.pdf', '.epub')
+
+# pour ignorer les warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+warnings.filterwarnings("ignore", category=UserWarning,
+                        message="In the future version we will turn default option ignore_ncx to True.")
 
 
 # pour créer un livre avec un url
@@ -84,8 +89,6 @@ def recup_pdf(pdf_path):
 
 
 def recup_EPUB(epub_path):
-    warnings.filterwarnings("ignore", category=UserWarning,
-                            message="In the future version we will turn default option ignore_ncx to True.")
     # Récupère le livre
     livre = epub.read_epub(epub_path)
     # Récupère la date
