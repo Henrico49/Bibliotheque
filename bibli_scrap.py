@@ -4,7 +4,6 @@ from fonctions_fichier import *
 
 class bibli_scrap(bibli):
     def __init__(self, path="Default"):
-        self.livres = []
         super().__init__(path)
 
     def _scrap(self, url, nbmax):

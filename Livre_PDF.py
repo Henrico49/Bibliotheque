@@ -12,3 +12,6 @@ class Livre_PDF(Livre):
 
     def __str__(self):
         return f"Livre PDF:\n{self.arg}"
+
+L1 = Livre_PDF("https://math.univ-angers.fr/~jaclin/biblio/livres/abbot_flatland.pdf")
+print(L1)

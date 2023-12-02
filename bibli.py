@@ -5,7 +5,6 @@ from fonctions_fichier import *
 
 class bibli(Simple_bibli):
     def __init__(self, path="Default"):
-        self.livres = []  # inutile ?
         super().__init__(path)
 
     def telecharger(self, lien):
