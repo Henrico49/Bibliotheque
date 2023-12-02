@@ -73,7 +73,7 @@ match n:
                 exit(1)
             if est_lien_web(sys.argv[3]) and sys.argv[4].isdigit():
                 b1 = bibli_scrap(chemin_bibliotheque)
-                b1.alimenter(sys.argv[3], int(sys.argv[4]))
+                b1.scrap(sys.argv[3], int(sys.argv[4]))
             else:
                 print("Combinaison d'option non pris en compte.")
                 exit(1)
