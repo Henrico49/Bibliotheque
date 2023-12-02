@@ -7,15 +7,15 @@ class bibli(Simple_bibli):
     def __init__(self, path="Default"):
         super().__init__(path)
 
-    def telecharger(self, lien):
+    def telecharger(self, url):
             try:
                 # Envoie une requête GET pour récupérer le contenu du fichier
-                response = requests.get(lien, stream=True, verify=False)
+                response = requests.get(url, stream=True, verify=False)
 
                 # Vérifie si la requête a réussi (code 200 OK)
                 if response.status_code == 200:
                     # Récupère le nom du fichier depuis l'URL
-                    nom_fichier = os.path.basename(lien)
+                    nom_fichier = os.path.basename(url)
                     # Enregistre le fichier dans le dossier local
                     chemin_local = os.path.join(self.path, nom_fichier)
                     with open(chemin_local, 'wb') as fichier_local:
@@ -39,7 +39,7 @@ class bibli(Simple_bibli):
                     return False
 
             except Exception as e:
-                print(f"Une erreur s'est produite lors du téléchargement du livre {lien} : {e}")
+                print(f"Une erreur s'est produite lors du téléchargement du livre {url} : {e}")
 
     def alimenter(self, url, nbmax=10):
         try:

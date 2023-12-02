@@ -50,7 +50,8 @@ Elle s'utilise comme suit :
     chemin d'accès du livre que l'on veut ajouter au dossier.
 
 ### 2. Classe : *bibli*
-La classe *bibli* hérite de *simple_bibli* et permet en plus d'alimenter la bibliothèque avec des livres téléchargés sur internet. ELle s'utilise comme suit : 
-* On crée la bibliothèque de la même manière que 
+La classe `bibli` hérite de `simple_bibli` et permet en plus d'alimenter la bibliothèque avec des livres téléchargés sur internet. Elle s'utilise comme suit : 
+* On crée la bibliothèque de la même manière que `simple_blibli`.
+* `telecharger(self, url, nbmax)`
 
 
