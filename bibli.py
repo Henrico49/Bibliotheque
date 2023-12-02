@@ -12,7 +12,7 @@ class bibli(Simple_bibli):
             try:
                 # Vérifie si le livre est déjà présent
                 nom_fichier = os.path.basename(lien)
-                if nom_fichier in self.livres:
+                if nom_fichier in self.livres:  # attention
                     print(f"Le livre {nom_fichier} est déjà présent.")
                 else:
                     # Envoie une requête GET pour récupérer le contenu du fichier
