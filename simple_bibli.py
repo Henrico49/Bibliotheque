@@ -35,11 +35,11 @@ class Simple_bibli(base_bibli):
     def ajouter(self, livre):
         try:
             # Vérifie si le livre est déjà présent
-            if os.path.basename(livre.ressource) in self.livres:
-                print(f"Le livre {os.path.basename(livre.ressource)} est déjà présent.")
+            if livre in self.livres:
+                print(f"Le livre {livre.titre()} est déjà présent.")
                 return True
             # Vérifie si le chemin existe
-            if os.path.isdir(livre.ressource):
+            if os.path.isfile(livre.ressource):
                 # Si c'est un dossier local, copie le fichier dans le dossier
                 shutil.copy(livre.ressource, self.path)
                 print(f"Le livre {os.path.basename(livre.ressource)} a été ajouté au dossier.")
