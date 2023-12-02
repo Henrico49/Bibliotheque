@@ -16,7 +16,7 @@ class bibli_scrap(bibli):
             if nblivres >= nbmax:
                 break
 
-    def scrap(self, url, profondeur, nbmax):
+    def scrap(self, url, profondeur, nbmax=10):
         if profondeur >= 0 and nbmax > 0:
             nbinitial = len(self.livres)
             self._scrap(url, nbmax)
