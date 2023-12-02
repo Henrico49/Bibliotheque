@@ -16,6 +16,7 @@ import sys
 extensions = ('.pdf', '.epub')
 
 
+# pour créer un livre avec un url
 def telecharger(lien):
     try:
         # Envoie une requête GET pour récupérer le contenu du fichier

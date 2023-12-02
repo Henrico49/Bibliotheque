@@ -9,8 +9,6 @@ class bibli(Simple_bibli):
 
     def telecharger(self, lien):
             try:
-                # Vérifie si le livre est déjà présent
-                nom_fichier = os.path.basename(lien)
                 # Envoie une requête GET pour récupérer le contenu du fichier
                 response = requests.get(lien, stream=True, verify=False)
 
