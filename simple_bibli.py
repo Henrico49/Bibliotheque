@@ -1,9 +1,8 @@
 from base_blibli import base_bibli
-import os
-import shutil
 from Livre_EPUB import Livre_EPUB
 from Livre_PDF import Livre_PDF
 from fonctions_fichier import *
+
 
 class Simple_bibli(base_bibli):
     def __init__(self, path="Default"):
@@ -18,13 +17,18 @@ class Simple_bibli(base_bibli):
                 os.makedirs(path)
             # Liste des fichiers dans le répertoire
             fichiers = os.listdir(path)
+            # ajoute les livres déjà présents dans le dossier
             for fichier in fichiers:
-                if fichier.lower().endswith('.epub'):
-                    self.livres.append(Livre_EPUB(os.path.join(self.path,fichier)))
-                elif fichier.lower().endswith('.pdf'):
-                    book = os.path.join(self.path,fichier)
-                    self.livres.append(Livre_PDF(book))
-
+                extension = os.path.splitext(fichier)[1].lower()
+                match extension:
+                    case '.epub':
+                        self.livres.append(Livre_EPUB(os.path.join(self.path, fichier)))
+                        self.ajoute_auteur(Livre_EPUB(os.path.join(self.path, fichier)))
+                    case '.pdf':
+                        self.livres.append(Livre_PDF(os.path.join(self.path, fichier)))
+                        self.ajoute_auteur(Livre_PDF(os.path.join(self.path, fichier)))
+                    case _:
+                        print("Extension "+extension +" pas prise en compte")
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
 
@@ -33,7 +37,7 @@ class Simple_bibli(base_bibli):
             # Vérifie si le livre est déjà présent
             if os.path.basename(livre.ressource) in self.livres:
                 print(f"Le livre {os.path.basename(livre.ressource)} est déjà présent.")
-                return False
+                return True
             # Vérifie si le chemin existe
             if os.path.isdir(livre.ressource):
                 # Si c'est un dossier local, copie le fichier dans le dossier
@@ -43,8 +47,9 @@ class Simple_bibli(base_bibli):
                 print("Type de chemin non pris en charge.")
                 return False
 
-            # Ajoute le livre à la liste des livres
+            # Ajoute le livre à la liste des livres et l'auteur à la liste des auteurs
             self.livres.append(livre)
+            self.ajoute_auteur(livre)
             return True
         except FileNotFoundError:
             print(f"Le fichier {os.path.basename(livre.ressource)} n'a pas été trouvé.")
@@ -52,22 +57,21 @@ class Simple_bibli(base_bibli):
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
             return False
+
     def __str__(self):
         return "\n".join(str(livre) for livre in self.livres)
 
-    def ajoute_auteur(self,livre):
+    # ajoute un auteur à la liste des auteurs
+    def ajoute_auteur(self, livre):
         if livre.auteur() not in self.auteurs:
             self.auteurs.append(livre.auteur())
+            return True
+        return False
 
     def rapport_livres(self, format, fichier='rapport'):
         match format:
             case 'PDF':
-                rapport = open("rapport_livres.txt",'w')
+                rapport = open("rapport_livres.txt", 'w')
                 for livre in self.livres:
-                    rapport.write(livre.__str__()+"\n")
+                    rapport.write(livre.__str__() + "\n")
                 rapport.close()
-
-
-
-
-

@@ -1,12 +1,7 @@
 from simple_bibli import Simple_bibli
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-import os
-import shutil
 from Livre_EPUB import Livre_EPUB
 from Livre_PDF import Livre_PDF
-
+from fonctions_fichier import *
 
 class bibli(Simple_bibli):
     def __init__(self, path="Default"):
@@ -69,6 +64,7 @@ class bibli(Simple_bibli):
             liens_epub_pdf = [urljoin(url, lien['href']) for lien in liens if
                               lien['href'].lower().endswith(('.epub', '.pdf'))]
 
+            # Télécharge les livres
             for lien in liens_epub_pdf:
                 if len(self.livres) >= nbmax:
                     break

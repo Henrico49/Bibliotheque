@@ -11,8 +11,11 @@ import shutil
 import configparser
 from urllib.parse import urlparse
 import sys
+
 # pour rajouter un format de fichier, ajoutez l'extension au tuple:
 extensions = ('.pdf', '.epub')
+
+
 def telecharger(lien):
     try:
         # Envoie une requête GET pour récupérer le contenu du fichier
@@ -22,7 +25,7 @@ def telecharger(lien):
         if response.status_code == 200:
             # Récupère le nom du fichier depuis l'URL
             nom_fichier = os.path.basename(lien)
-            repertoire_telechargements = os.getcwd()+"/telechargements"
+            repertoire_telechargements = os.getcwd() + "/telechargements"
             # Vérifie si le répertoire de téléchargement existe, sinon le crée
             if not os.path.exists(repertoire_telechargements):
                 os.makedirs(repertoire_telechargements)
@@ -45,7 +48,7 @@ def recup_date_langue(pdf_path, numero_page):
         if 0 <= numero_page < pdf_document.page_count:
             # Récupérer la page spécifique
             page = pdf_document[numero_page]
-            # Afficher le texte de la page
+            # Récupère le texte de la page
             texte_page = page.get_text()
             # Utilise une expression régulière pour trouver le premier nombre
             match = re.search(r'\b\d+\b', texte_page)
@@ -55,21 +58,29 @@ def recup_date_langue(pdf_path, numero_page):
             else:
                 date = None
             try:
+                # Récupère la langue du texte
                 language = detect(texte_page)
             except Exception as e:
                 print("Erreur lors de la détection de la langue :", str(e))
                 return date, "pas de langue détectée"
             return date, language
+
+
 # pour un nouveau format de fichier, ajoutez une fonction de récuperation adaptée:
 def recup_pdf(pdf_path):
     with fitz.open(pdf_path) as pdf_document:
+        # Récupère le sujet
         sujet = pdf_document.metadata.get("subject", None)
+        # Récupère l'auteur
         auteur = pdf_document.metadata.get("author", None)
+        # Récupère le titre
         titre = pdf_document.metadata.get("title", None)
+        # Récupère la date et la langue
         date, language = recup_date_langue(pdf_path, 0)
 
         dict_resultat = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': language}
         return dict_resultat
+
 
 def recup_EPUB(epub_path):
     warnings.filterwarnings("ignore", category=UserWarning,
@@ -90,7 +101,7 @@ def recup_EPUB(epub_path):
 
     # Récupère l'auteur du livre
     auteur = ", ".join(author[0] for author in livre.get_metadata('DC', 'creator')) if livre.get_metadata('DC',
-                                                                                                             'creator') else None
+                                                                                                          'creator') else None
     dict = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': language}
     return dict
 
@@ -104,13 +115,15 @@ def recup_liens_livres(url):
     # Analyse le contenu HTML de la page
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Récupère tous les liens avec un attribut href
+    # Récupère tous les liens avec un attribut href qui se terminent par les extensions supportées
     liens = soup.find_all('a', href=True)
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if
-                      lien.get('href').lower().endswith(extensions)]
+                     lien.get('href').lower().endswith(extensions)]
     return liens_filtres
 
-def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et epub
+
+# récupère tous les liens sauf ceux qui sont des documents
+def recup_liens_externes(url):
     # Envoie une requête GET à l'URL spécifiée
     response = requests.get(url, verify=False)
     # Vérifie si la requête a réussi (code 200 OK)
@@ -123,15 +136,17 @@ def recup_liens_externes(url):  #  récupère tous les liens sauf ceux pdf et ep
     liens = soup.find_all('a', href=True)
     # tous les liens "externes", qui ne sont pas des documents
     liens_filtres = [urljoin(url, lien.get('href')) for lien in liens if not
-                     lien.get('href').lower().endswith(extensions + ('.zip',)) and est_url_valide(urljoin(url, lien.get('href')))]
+    lien.get('href').lower().endswith(extensions + ('.zip',)) and est_url_valide(urljoin(url, lien.get('href')))]
     return liens_filtres
 
+# cette fonction permet de vérifier qu'une chaine de caractère est bien un lien web
 def est_lien_web(chaine):
     try:
         result = urlparse(chaine)
         return all([result.scheme, result.netloc])
     except ValueError:
         return False
+
 
 # cette fonction permet de verifier qu'un lien dirige bien vers une page web différente
 # et pas seulement vers la même page paramétrée différement
@@ -148,11 +163,13 @@ def est_url_valide(url):
 
     return False
 
+# cette fonction permet de lire un fichier de configuration
 def lire_config(chemin_fichier):
     config = configparser.ConfigParser()
     config.read(chemin_fichier)
     return config
 
+# cette fonction permet de récupérer les paramètres de configuration
 def config_defaut():
     config = lire_config(sys.argv[2])
     chemin_bibliotheque = config.get('Bibliotheque', 'bibliotheque')
