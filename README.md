@@ -57,6 +57,8 @@ Pour utiliser le programme, il faut installer les modules suivants :
 * `sys`
 
 Vous pouvez les installer en utilisant la commande suivante :
+* `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect regex ebooklib`
+
 
 ### 2. Classe : `simple_blibli`
 La classe `simple_bibli` hérite de `base_bibli` permet de créer une bibiliothèque à partir de livres stockés sur l'ordinateur.
