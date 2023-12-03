@@ -48,13 +48,13 @@ Pour utiliser le programme, il faut installer les modules suivants :
 * `urllib3` pour extraire les liens des pages web.
 * `fitz` from `PyMuPDF` pour extraire les métadonnées des fichiers PDF.
 * `detect` from `langdetect` pour détecter la langue du fichier.
-* `re` 
+* `re` permet de créer des expressions régulières
 * `epub` from `ebooklib` pour extraire les métadonnées des fichiers EPUB.
 * `warnings` pour gérer les avertissements.
 * `os` pour gérer les fichiers et dossiers.
-* `shutil` 
-* `configparser`
-* `sys`
+* `shutil` pour copier des fichiers 
+* `configparser` pour lire les fichiers de configuration
+* `sys` permet d'avoir accès aux options données au programme
 
 Vous pouvez les installer en utilisant la commande suivante :
 * `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect regex ebooklib`
