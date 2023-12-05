@@ -2,7 +2,6 @@ from Livre import *
 from fonctions_fichier import *
 
 
-
 class Livre_EPUB(Livre):
     def __init__(self, ressource):
         super().__init__(ressource)
