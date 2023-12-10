@@ -70,9 +70,102 @@ class Simple_bibli(base_bibli):
             return True
         return False
 
+    def auteur_livres(self):
+        auteurs = self.auteurs
+        livres = self.livres
+        auteurs_et_livres = {}
+
+        for auteur in auteurs:
+            auteurs_et_livres[auteur] = []
+
+        for livre in livres:
+            auteur = livre.auteur()
+            # Ajoutez le livre à la liste des livres de l'auteur
+            auteurs_et_livres[auteur].append(livre)
+        return auteurs_et_livres
+
+    def contenu_epub_auteur(self):
+        liste_auteurs = self.auteur_livres()
+        contenu = "<h1>Liste des auteurs et de leurs livres :</h1>"
+        contenu += "<table>"
+        contenu += "<tr><th>Auteur</th><th>Titres</th><th>Dates</th><th>Sujets</th><th>Langues</th></tr>"
+        for auteur in liste_auteurs:
+            contenu += f"<tr><td>{auteur}</td>"
+            liste_titre = []
+            liste_date = []
+            liste_sujet = []
+            liste_langue = []
+            for livre in liste_auteurs[auteur]:
+                if type(livre).__name__ == "Livre_PDF":
+                    metadonnees = f.recup_PDF(livre.ressource)
+                elif type(livre).__name__ == "Livre_EPUB":
+                    metadonnees = f.recup_EPUB(livre.ressource)
+                liste_date.append(metadonnees['date'])
+                liste_titre.append(metadonnees['titre'])
+                liste_sujet.append(metadonnees['sujet'])
+                liste_langue.append(metadonnees['langue'])
+            contenu += f"<td><ul>"
+            for titre in liste_titre:
+                contenu += f"<li>{titre}</li>"
+            contenu += f"</ul></td>"
+            contenu += f"<td><ul>"
+            for date in liste_date:
+                contenu += f"<li>{date}</li>"
+            contenu += f"</ul></td>"
+            contenu += f"<td><ul>"
+            for sujet in liste_sujet:
+                contenu += f"<li>{sujet}</li>"
+            contenu += f"</ul></td>"
+            contenu += f"<td><ul>"
+            for langue in liste_langue:
+                contenu += f"<li>{langue}</li>"
+            contenu += f"</ul></td></tr>"
+        contenu += "</table>"
+        return contenu
+
     def rapport_livres(self, format, fichier='./rapport'):
         match format:
             case 'PDF':
-                f.rapport_PDF(fichier, self.path)
+                contenu = " "
+                for fichier1 in os.listdir(self.path):
+                    if fichier1.endswith('.epub'):
+                        metadonne = f.recup_EPUB(self.path + '/' + fichier1)
+                        contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
+                    elif fichier1.endswith('.pdf'):
+                        metadonne = f.recup_PDF(self.path + '/' + fichier1)
+                        contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
+                f.rapport_PDF(fichier, contenu, "livre")
             case 'EPUB':
-                f.rapport_EPUB(fichier, self.path)
+                contenu = "<h1>Liste des livres :</h1>"
+                contenu += '<table>'
+                contenu += '<tr><th>Type</th><th>Auteur</th><th>titre</th><th>date</th><th>sujet</th><th>langue</th></tr>'
+                for livre in self.livres:
+                    if type(livre).__name__ == "Livre_PDF":
+                        metadonnees = f.recup_PDF(livre.ressource)
+                    elif type(livre).__name__ == "Livre_EPUB":
+                        metadonnees = f.recup_EPUB(livre.ressource)
+                    contenu += f"<tr><td>{livre.type()}</td><td>{livre.auteur()}</td><td>{livre.titre()}</td><td>{metadonnees['date']}</td><td>{metadonnees['sujet']}</td><td>{metadonnees['langue']}</td></tr>"
+                contenu += '</table>'
+                f.rapport_EPUB(fichier, contenu, "livre")
+
+    def rapport_auteurs(self, format, fichier="./rapport"):
+        match format:
+            case 'PDF':
+                auteurs_et_livres = self.auteur_livres()
+                contenu = ""
+                for auteur in auteurs_et_livres:
+                    contenu += f"{auteur} :\n"
+                    for livre in auteurs_et_livres[auteur]:
+                        if type(livre).__name__ == "Livre_PDF":
+                            metadonnees = f.recup_PDF(livre.ressource)
+                        elif type(livre).__name__ == "Livre_EPUB":
+                            metadonnees = f.recup_EPUB(livre.ressource)
+                        contenu += f"\t\t\tTitre: {metadonnees['titre']}\n\t\t\tDate: {metadonnees['date']}\n\t\t\tSujet: {metadonnees['sujet']}\n\t\t\tLangue: {metadonnees['langue']}\n\n"
+                    contenu += "\n"
+                f.rapport_PDF(fichier, contenu, "auteur")
+            case 'EPUB':
+                contenu = self.contenu_epub_auteur()
+                f.rapport_EPUB(fichier, contenu, "auteur")
+
+
+
