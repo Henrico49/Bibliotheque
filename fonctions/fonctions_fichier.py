@@ -11,6 +11,7 @@ import os
 import shutil
 import configparser
 import sys
+from fpdf import FPDF
 
 # pour rajouter un format de fichier, ajoutez l'extension au tuple:
 extensions = ('.pdf', '.epub')
@@ -95,7 +96,7 @@ def recup_EPUB(epub_path):
     date = livre.get_metadata('DC', 'date')[0][0] if livre.get_metadata('DC', 'date') else "/"
 
     # Récupère le sujet
-    sujet = livre.get_metadata('DC', 'Type')[0][0] if livre.get_metadata('DC', 'Type') else " "
+    sujet = livre.get_metadata('DC', 'description')[0][0] if livre.get_metadata('DC', 'description') else " "
 
     # Si le sujet est trop long, le tronquer
     if len(sujet) > 50:
@@ -147,6 +148,7 @@ def recup_liens_externes(url):
     lien.get('href').lower().endswith(extensions + ('.zip',)) and est_url_valide(urljoin(url, lien.get('href')))]
     return liens_filtres
 
+
 # cette fonction permet de vérifier qu'une chaine de caractère est bien un lien web
 def est_lien_web(chaine):
     try:
@@ -171,11 +173,13 @@ def est_url_valide(url):
 
     return False
 
+
 # cette fonction permet de lire un fichier de configuration
 def lire_config(chemin_fichier):
     config = configparser.ConfigParser()
     config.read(chemin_fichier)
     return config
+
 
 # cette fonction permet de récupérer les paramètres de configuration
 def config_defaut():
@@ -196,6 +200,7 @@ def config_defaut():
         print(f"Une erreur s'est produite : {e}")
     print(f"Nombre maximum de livres : {nb_max}")
     return chemin_bibliotheque, chemin_etats, nb_max
+
 
 def rapport_EPUB(dossierArrive, dossierLivre):
     book = epub.EpubBook()
@@ -243,3 +248,30 @@ def rapport_EPUB(dossierArrive, dossierLivre):
     # create epub file
     chemin_arriver = os.path.join(dossierArrive, 'rapport.epub')
     epub.write_epub(chemin_arriver, book, {})
+
+
+class PDF(FPDF):
+    def header(self):
+        self.set_font('helvetica', 'B', 12)
+        self.cell(80)
+        self.cell(30, 10, 'Rapport Livre', 1, 1, 'C')
+        self.ln(20)
+
+
+def rapport_PDF(dossierArrive, dossierLivre):
+    pdf = PDF("P", "mm", "A4")
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font('helvetica', size=12)
+    txt = " "
+    for fichier in os.listdir(dossierLivre):
+        chemin_complet = os.path.join(dossierLivre, fichier)
+        if fichier.endswith('.epub'):
+            metadonne = recup_EPUB(dossierLivre + '/' + fichier)
+            txt += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
+        elif fichier.endswith('.pdf'):
+            metadonne = recup_PDF(dossierLivre + '/' + fichier)
+            txt += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
+    pdf.multi_cell(0, 10, txt, align='L')
+    chemin_arriver = os.path.join(dossierArrive, 'rapport.pdf')
+    pdf.output(chemin_arriver, 'F')
