@@ -73,9 +73,6 @@ class Simple_bibli(base_bibli):
     def rapport_livres(self, format, fichier='./rapport'):
         match format:
             case 'PDF':
-                rapport = open("rapport_livres.txt", 'w')
-                for livre in self.livres:
-                    rapport.write(livre.__str__() + "\n")
-                rapport.close()
+                f.rapport_PDF(fichier, self.path)
             case 'EPUB':
                 f.rapport_EPUB(fichier, self.path)
