@@ -24,8 +24,8 @@ match n:
             b1 = Simple_bibli()
             b1.rapport_livres("PDF")
             b1.rapport_livres("EPUB")
-            b1.rapport_auteurs("PDF")
-            b1.rapport_auteurs("EPUB")
+            #b1.rapport_auteurs("PDF")
+            #b1.rapport_auteurs("EPUB")
         elif f.est_lien_web(sys.argv[1]):
             b1 = bibli()
             b1.alimenter(sys.argv[1])
