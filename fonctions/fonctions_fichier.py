@@ -73,7 +73,7 @@ def recup_date_langue(pdf_path, numero_page):
 
 
 # pour un nouveau format de fichier, ajoutez une fonction de récuperation adaptée:
-def recup_pdf(pdf_path):
+def recup_PDF(pdf_path):
     with fitz.open(pdf_path) as pdf_document:
         # Récupère le sujet
         sujet = pdf_document.metadata.get("subject", None)
@@ -92,10 +92,14 @@ def recup_EPUB(epub_path):
     # Récupère le livre
     livre = epub.read_epub(epub_path)
     # Récupère la date
-    date = livre.get_metadata('DC', 'date')[0][0] if livre.get_metadata('DC', 'date') else None
+    date = livre.get_metadata('DC', 'date')[0][0] if livre.get_metadata('DC', 'date') else "/"
 
     # Récupère le sujet
-    sujet = livre.get_metadata('DC', 'description')[0][0] if livre.get_metadata('DC', 'description') else None
+    sujet = livre.get_metadata('DC', 'Type')[0][0] if livre.get_metadata('DC', 'Type') else " "
+
+    # Si le sujet est trop long, le tronquer
+    if len(sujet) > 50:
+        sujet = sujet[:50] + "..."
 
     # Récupère le titre du livre
     titre = livre.get_metadata('DC', 'title')[0][0] if livre.get_metadata('DC', 'title') else None
@@ -182,5 +186,60 @@ def config_defaut():
     print(f"Vous avez executer le programme avec le fichier de configuration : {sys.argv[2]}")
     print(f"Chemin de la bibliothèque : {chemin_bibliotheque}")
     print(f"Chemin des états : {chemin_etats}")
+    try:
+        if not os.path.exists(chemin_etats):
+            # Crée le dossier si celui-ci n'existe pas
+            print(f"Le dossier {chemin_etats} n'existe pas.")
+            print(f"Création du dossier {chemin_etats}.")
+            os.makedirs(chemin_etats)
+    except Exception as e:
+        print(f"Une erreur s'est produite : {e}")
     print(f"Nombre maximum de livres : {nb_max}")
     return chemin_bibliotheque, chemin_etats, nb_max
+
+def rapport_EPUB(dossierArrive, dossierLivre):
+    book = epub.EpubBook()
+
+    # set metadata
+    book.set_identifier('1')
+    book.set_title('Rapport Analyse de la data des data Scientist')
+    book.set_language('fr')
+    book.add_metadata('DC', 'Type', 'rapport')
+    book.add_author('Alexandre Salgueiro Henriques De Jesus et Noé Wahl')
+
+    # Liste
+    liste = epub.EpubHtml(title='Liste des livres', file_name='liste.xhtml', lang='fr')
+    liste.content = '<h1>Liste des livres</h1>'
+    liste.content += '<table>'
+    liste.content += '<tr><th>Type</th><th>Auteur</th><th>titre</th><th>date</th><th>sujet</th><th>langue</th></tr>'
+    # Parcourir chaque fichier dans le dossier
+    for fichier in os.listdir(dossierLivre):
+        # Construire le chemin complet du fichier
+        chemin_complet = os.path.join(dossierLivre, fichier)
+        # Vérifier si c'est un fichier (et non un dossier)
+        if os.path.isfile(chemin_complet):
+            # Vérifier si l'extension est .epub ou .pdf
+            if fichier.endswith('.epub'):
+                print(f"{fichier} est un fichier EPUB.")
+                metadonne = recup_EPUB(dossierLivre + '/' + fichier)
+                liste.content += f"<tr><td>EPUB</td><td>{metadonne['auteur']}</td><td>{metadonne['titre']}</td><td>{metadonne['date']}</td><td>{metadonne['sujet']}</td><td>{metadonne['langue']}</td></tr>"
+            elif fichier.endswith('.pdf'):
+                print(f"{fichier} est un fichier PDF.")
+                metadonne = recup_PDF(dossierLivre + '/' + fichier)
+                liste.content += f"<tr><td>PDF</td><td>{metadonne['auteur']}</td><td>{metadonne['titre']}</td><td>{metadonne['date']}</td><td>{metadonne['sujet']}</td><td>{metadonne['langue']}</td></tr>"
+    liste.content += '</table>'
+
+    book.add_item(liste)
+
+    # add navigation files
+    book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
+
+    # create spine
+    book.spine = ['nav', liste]
+
+    # style
+    style = 'body { font-family: Times, Times New Roman, serif; }'
+    # create epub file
+    chemin_arriver = os.path.join(dossierArrive, 'rapport.epub')
+    epub.write_epub(chemin_arriver, book, {})
