@@ -202,38 +202,19 @@ def config_defaut():
     return chemin_bibliotheque, chemin_etats, nb_max
 
 
-def rapport_EPUB(dossierArrive, dossierLivre):
+def rapport_EPUB(dossierArrive, contenu, sortie):
     book = epub.EpubBook()
 
     # set metadata
     book.set_identifier('1')
-    book.set_title('Rapport Analyse de la data des data Scientist')
+    book.set_title('Rapport de la bibliothèque')
     book.set_language('fr')
     book.add_metadata('DC', 'Type', 'rapport')
     book.add_author('Alexandre Salgueiro Henriques De Jesus et Noé Wahl')
 
     # Liste
     liste = epub.EpubHtml(title='Liste des livres', file_name='liste.xhtml', lang='fr')
-    liste.content = '<h1>Liste des livres</h1>'
-    liste.content += '<table>'
-    liste.content += '<tr><th>Type</th><th>Auteur</th><th>titre</th><th>date</th><th>sujet</th><th>langue</th></tr>'
-    # Parcourir chaque fichier dans le dossier
-    for fichier in os.listdir(dossierLivre):
-        # Construire le chemin complet du fichier
-        chemin_complet = os.path.join(dossierLivre, fichier)
-        # Vérifier si c'est un fichier (et non un dossier)
-        if os.path.isfile(chemin_complet):
-            # Vérifier si l'extension est .epub ou .pdf
-            if fichier.endswith('.epub'):
-                print(f"{fichier} est un fichier EPUB.")
-                metadonne = recup_EPUB(dossierLivre + '/' + fichier)
-                liste.content += f"<tr><td>EPUB</td><td>{metadonne['auteur']}</td><td>{metadonne['titre']}</td><td>{metadonne['date']}</td><td>{metadonne['sujet']}</td><td>{metadonne['langue']}</td></tr>"
-            elif fichier.endswith('.pdf'):
-                print(f"{fichier} est un fichier PDF.")
-                metadonne = recup_PDF(dossierLivre + '/' + fichier)
-                liste.content += f"<tr><td>PDF</td><td>{metadonne['auteur']}</td><td>{metadonne['titre']}</td><td>{metadonne['date']}</td><td>{metadonne['sujet']}</td><td>{metadonne['langue']}</td></tr>"
-    liste.content += '</table>'
-
+    liste.content = contenu
     book.add_item(liste)
 
     # add navigation files
@@ -243,35 +224,27 @@ def rapport_EPUB(dossierArrive, dossierLivre):
     # create spine
     book.spine = ['nav', liste]
 
-    # style
-    style = 'body { font-family: Times, Times New Roman, serif; }'
     # create epub file
-    chemin_arriver = os.path.join(dossierArrive, 'rapport.epub')
+    nom_sortie = 'rapport_'+sortie+'.epub'
+    chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     epub.write_epub(chemin_arriver, book, {})
-
 
 class PDF(FPDF):
     def header(self):
         self.set_font('helvetica', 'B', 12)
-        self.cell(80)
-        self.cell(30, 10, 'Rapport Livre', 1, 1, 'C')
+        self.cell(60)
+        self.cell(70, 10, 'Rapport de la bibliothèque', 1, 1, 'C')
         self.ln(20)
 
 
-def rapport_PDF(dossierArrive, dossierLivre):
+def rapport_PDF(dossierArrive, contenu, sortie):
     pdf = PDF("P", "mm", "A4")
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.set_font('helvetica', size=12)
-    txt = " "
-    for fichier in os.listdir(dossierLivre):
-        chemin_complet = os.path.join(dossierLivre, fichier)
-        if fichier.endswith('.epub'):
-            metadonne = recup_EPUB(dossierLivre + '/' + fichier)
-            txt += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
-        elif fichier.endswith('.pdf'):
-            metadonne = recup_PDF(dossierLivre + '/' + fichier)
-            txt += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
-    pdf.multi_cell(0, 10, txt, align='L')
-    chemin_arriver = os.path.join(dossierArrive, 'rapport.pdf')
+    pdf.multi_cell(0, 7, contenu, align='L')
+    nom_sortie = 'rapport_' + sortie + '.pdf'
+    chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     pdf.output(chemin_arriver, 'F')
+
+
