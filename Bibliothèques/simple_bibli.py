@@ -1,7 +1,9 @@
-from base_blibli import base_bibli
-from Livre_EPUB import Livre_EPUB
-from Livre_PDF import Livre_PDF
-from fonctions_fichier import *
+from Bibliothèques.base_blibli import base_bibli
+from Livres.Livre_EPUB import Livre_EPUB
+from Livres.Livre_PDF import Livre_PDF
+import os
+import shutil
+import fonctions.fonctions_fichier as f
 
 
 class Simple_bibli(base_bibli):
@@ -28,7 +30,7 @@ class Simple_bibli(base_bibli):
                         self.livres.append(Livre_PDF(os.path.join(self.path, fichier)))
                         self.ajoute_auteur(Livre_PDF(os.path.join(self.path, fichier)))
                     case _:
-                        print("Extension "+extension +" pas prise en compte")
+                        print("Extension " + extension + " pas prise en compte")
         except Exception as e:
             print(f"Une erreur s'est produite : {e}")
 
@@ -68,10 +70,12 @@ class Simple_bibli(base_bibli):
             return True
         return False
 
-    def rapport_livres(self, format, fichier='rapport'):
+    def rapport_livres(self, format, fichier='./rapport'):
         match format:
             case 'PDF':
                 rapport = open("rapport_livres.txt", 'w')
                 for livre in self.livres:
                     rapport.write(livre.__str__() + "\n")
                 rapport.close()
+            case 'EPUB':
+                f.rapport_EPUB(fichier, self.path)

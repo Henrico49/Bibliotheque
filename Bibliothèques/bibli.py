@@ -1,7 +1,10 @@
-from simple_bibli import Simple_bibli
-from Livre_EPUB import Livre_EPUB
-from Livre_PDF import Livre_PDF
-from fonctions_fichier import *
+from Bibliothèques.simple_bibli import Simple_bibli
+from Livres.Livre_EPUB import Livre_EPUB
+from Livres.Livre_PDF import Livre_PDF
+import requests
+import os
+import shutil
+import fonctions.fonctions_fichier as f
 
 class bibli(Simple_bibli):
     def __init__(self, path="Default"):
@@ -43,7 +46,7 @@ class bibli(Simple_bibli):
 
     def alimenter(self, url, nbmax=10):
         try:
-            liens_livres = recup_liens_livres(url)
+            liens_livres = f.recup_liens_livres(url)
             nblivres = 0  # compte le nombre de livres effectivement téléchargés
             for lien_livre in liens_livres:
                 if self.telecharger(lien_livre):
