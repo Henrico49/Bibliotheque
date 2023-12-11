@@ -131,12 +131,12 @@ class Simple_bibli(base_bibli):
         match format:
             case 'PDF':
                 contenu = " "
-                for fichier1 in os.listdir(self.path):
-                    if fichier1.endswith('.epub'):
-                        metadonne = f.recup_EPUB(self.path + '/' + fichier1)
+                for file in os.listdir(self.path):
+                    if file.endswith('.epub'):
+                        metadonne = f.recup_EPUB(self.path + '/' + file)
                         contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
-                    elif fichier1.endswith('.pdf'):
-                        metadonne = f.recup_PDF(self.path + '/' + fichier1)
+                    elif file.endswith('.pdf'):
+                        metadonne = f.recup_PDF(self.path + '/' + file)
                         contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
                 f.rapport_PDF(fichier, contenu, "livre")
             case 'EPUB':
