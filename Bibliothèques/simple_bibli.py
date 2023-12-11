@@ -96,10 +96,14 @@ class Simple_bibli(base_bibli):
             liste_sujet = []
             liste_langue = []
             for livre in liste_auteurs[auteur]:
-                if type(livre).__name__ == "Livre_PDF":
-                    metadonnees = f.recup_PDF(livre.ressource)
-                elif type(livre).__name__ == "Livre_EPUB":
-                    metadonnees = f.recup_EPUB(livre.ressource)
+                motif = livre.type()
+                match motif:
+                    case "PDF":
+                        metadonnees = f.recup_PDF(livre.ressource)
+                    case "EPUB":
+                        metadonnees = f.recup_EPUB(livre.ressource)
+                    case _:
+                        raise Exception("Type de livre non pris en compte")
                 liste_date.append(metadonnees['date'])
                 liste_titre.append(metadonnees['titre'])
                 liste_sujet.append(metadonnees['sujet'])
@@ -147,6 +151,8 @@ class Simple_bibli(base_bibli):
                     contenu += f"<tr><td>{livre.type()}</td><td>{livre.auteur()}</td><td>{livre.titre()}</td><td>{metadonnees['date']}</td><td>{metadonnees['sujet']}</td><td>{metadonnees['langue']}</td></tr>"
                 contenu += '</table>'
                 f.rapport_EPUB(fichier, contenu, "livre")
+            case _:
+                raise Exception("Format non pris en compte")
 
     def rapport_auteurs(self, format, fichier="./rapport"):
         match format:
@@ -166,6 +172,8 @@ class Simple_bibli(base_bibli):
             case 'EPUB':
                 contenu = self.contenu_epub_auteur()
                 f.rapport_EPUB(fichier, contenu, "auteur")
+            case _:
+                raise Exception("Format non pris en compte")
 
 
 
