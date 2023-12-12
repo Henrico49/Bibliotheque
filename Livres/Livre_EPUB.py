@@ -1,11 +1,11 @@
 from Livre import *
-from fonctions_fichier import *
+import fonctions.fonctions_fichier as f
 
 
 class Livre_EPUB(Livre):
     def __init__(self, ressource):
         super().__init__(ressource)
-        self.arg = recup_EPUB(self.ressource)
+        self.arg = f.recup_EPUB(self.ressource)
 
     def type(self):
         return "EPUB"
