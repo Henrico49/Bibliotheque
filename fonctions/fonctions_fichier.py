@@ -202,6 +202,7 @@ def config_defaut():
     return chemin_bibliotheque, chemin_etats, nb_max
 
 
+# cette fonction permet de créer un rapport au format EPUB
 def rapport_EPUB(dossierArrive, contenu, sortie):
     book = epub.EpubBook()
 
@@ -225,10 +226,12 @@ def rapport_EPUB(dossierArrive, contenu, sortie):
     book.spine = ['nav', liste]
 
     # create epub file
-    nom_sortie = 'rapport_'+sortie+'.epub'
+    nom_sortie = 'rapport_' + sortie + '.epub'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     epub.write_epub(chemin_arriver, book, {})
 
+
+# redéfinition de la classe FPDF pour pouvoir créer un rapport au format PDF
 class PDF(FPDF):
     def header(self):
         self.set_font('helvetica', 'B', 12)
@@ -237,6 +240,7 @@ class PDF(FPDF):
         self.ln(20)
 
 
+# fonction qui permet de créer un rapport au format PDF
 def rapport_PDF(dossierArrive, contenu, sortie):
     pdf = PDF("P", "mm", "A4")
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -246,5 +250,3 @@ def rapport_PDF(dossierArrive, contenu, sortie):
     nom_sortie = 'rapport_' + sortie + '.pdf'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     pdf.output(chemin_arriver, 'F')
-
-

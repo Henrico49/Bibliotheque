@@ -1,5 +1,5 @@
-from bibli import bibli
-from fonctions_fichier import *
+from Bibliothèques.bibli import bibli
+import fonctions.fonctions_fichier as f
 
 
 class bibli_scrap(bibli):
@@ -13,7 +13,7 @@ class bibli_scrap(bibli):
             nbinitial = len(self.livres)
             self.alimenter(url, nbmax)
             if profondeur >= 1:  # si la profondeur est supérieure à 1 on regarde les liens vers d'autres sites
-                liens_externes = recup_liens_externes(url)
+                liens_externes = f.recup_liens_externes(url)
                 i = 0
                 while len(self.livres) - nbinitial <= nbmax and i < len(liens_externes):
                     try:

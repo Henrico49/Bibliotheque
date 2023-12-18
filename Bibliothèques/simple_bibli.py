@@ -70,6 +70,7 @@ class Simple_bibli(base_bibli):
             return True
         return False
 
+    # retourne la liste des auteurs et leurs livres de la bibliothèque
     def auteur_livres(self):
         auteurs = self.auteurs
         livres = self.livres
@@ -84,6 +85,7 @@ class Simple_bibli(base_bibli):
             auteurs_et_livres[auteur].append(livre)
         return auteurs_et_livres
 
+    # créer le contenu du rapport au format EPUB qui liste les auteurs et leurs livres de la bibliothèque
     def contenu_epub_auteur(self):
         liste_auteurs = self.auteur_livres()
         contenu = "<h1>Liste des auteurs et de leurs livres :</h1>"
@@ -127,6 +129,7 @@ class Simple_bibli(base_bibli):
         contenu += "</table>"
         return contenu
 
+    # créer un rapport au format PDF ou EPUB qui liste les livres de la bibliothèque
     def rapport_livres(self, format, fichier='./rapport'):
         match format:
             case 'PDF':
@@ -154,6 +157,7 @@ class Simple_bibli(base_bibli):
             case _:
                 raise Exception("Format non pris en compte")
 
+    # créer un rapport au format PDF ou EPUB qui liste les auteurs et leurs livres de la bibliothèque
     def rapport_auteurs(self, format, fichier="./rapport"):
         match format:
             case 'PDF':
@@ -174,6 +178,3 @@ class Simple_bibli(base_bibli):
                 f.rapport_EPUB(fichier, contenu, "auteur")
             case _:
                 raise Exception("Format non pris en compte")
-
-
-

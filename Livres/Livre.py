@@ -1,5 +1,6 @@
-from base_livre import *
-from fonctions_fichier import *
+from Livres.base_livre import *
+import os
+import fonctions.fonctions_fichier as f
 
 
 class Livre(base_livre):
@@ -8,7 +9,7 @@ class Livre(base_livre):
             self.ressource = ressource
         # Vérifier si la chaîne ressemble à un lien Internet
         elif ressource.startswith(("http://", "https://", "ftp://")):
-            self.ressource = telecharger(ressource)
+            self.ressource = f.telecharger(ressource)
         else:
             raise FileNotFoundError(f"Le fichier {ressource} n'a pas été trouvé.")
         self.arg = {}  # dictionnaire
