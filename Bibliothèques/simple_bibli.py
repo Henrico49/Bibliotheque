@@ -134,24 +134,15 @@ class Simple_bibli(base_bibli):
         match format:
             case 'PDF':
                 contenu = " "
-                for file in os.listdir(self.path):
-                    if file.endswith('.epub'):
-                        metadonne = f.recup_EPUB(self.path + '/' + file)
-                        contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
-                    elif file.endswith('.pdf'):
-                        metadonne = f.recup_PDF(self.path + '/' + file)
-                        contenu += f"Titre: {metadonne['titre']}\nAuteur: {metadonne['auteur']}\nDate: {metadonne['date']}\nSujet: {metadonne['sujet']}\nLangue: {metadonne['langue']}\n\n"
+                for livre in self.livres:
+                    contenu += f"Titre: {livre.titre()}\nAuteur: {livre.auteur()}\nDate: {livre.date()}\nSujet: {livre.sujet()}\nLangue: {livre.langue()}\n\n"
                 f.rapport_PDF(fichier, contenu, "livre")
             case 'EPUB':
                 contenu = "<h1>Liste des livres :</h1>"
                 contenu += '<table>'
                 contenu += '<tr><th>Type</th><th>Auteur</th><th>titre</th><th>date</th><th>sujet</th><th>langue</th></tr>'
                 for livre in self.livres:
-                    if type(livre).__name__ == "Livre_PDF":
-                        metadonnees = f.recup_PDF(livre.ressource)
-                    elif type(livre).__name__ == "Livre_EPUB":
-                        metadonnees = f.recup_EPUB(livre.ressource)
-                    contenu += f"<tr><td>{livre.type()}</td><td>{livre.auteur()}</td><td>{livre.titre()}</td><td>{metadonnees['date']}</td><td>{metadonnees['sujet']}</td><td>{metadonnees['langue']}</td></tr>"
+                    contenu += f"<tr><td>{livre.type()}</td><td>{livre.auteur()}</td><td>{livre.titre()}</td><td>{livre.date()}</td><td>{livre.sujet()}</td><td>{livre.langue()}</td></tr>"
                 contenu += '</table>'
                 f.rapport_EPUB(fichier, contenu, "livre")
             case _:
@@ -166,11 +157,7 @@ class Simple_bibli(base_bibli):
                 for auteur in auteurs_et_livres:
                     contenu += f"{auteur} :\n"
                     for livre in auteurs_et_livres[auteur]:
-                        if type(livre).__name__ == "Livre_PDF":
-                            metadonnees = f.recup_PDF(livre.ressource)
-                        elif type(livre).__name__ == "Livre_EPUB":
-                            metadonnees = f.recup_EPUB(livre.ressource)
-                        contenu += f"\t\t\tTitre: {metadonnees['titre']}\n\t\t\tDate: {metadonnees['date']}\n\t\t\tSujet: {metadonnees['sujet']}\n\t\t\tLangue: {metadonnees['langue']}\n\n"
+                        contenu += f"\t\t\tTitre: {livre.titre()}\n\t\t\tDate: {livre.date()}\n\t\t\tSujet: {livre.sujet()}\n\t\t\tLangue: {livre.langue()}\n\n"
                     contenu += "\n"
                 f.rapport_PDF(fichier, contenu, "auteur")
             case 'EPUB':
