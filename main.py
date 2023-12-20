@@ -60,7 +60,7 @@ try:
                     b1.rapport_auteurs("EPUB", chemin_etats)
                 elif f.est_lien_web(sys.argv[3]):
                     b1 = bibli(chemin_bibliotheque)
-                    b1.alimenter(sys.argv[3])
+                    b1.alimenter(sys.argv[3],nb_max)
                 else:
                     print("Combinaison d'option non pris en compte.")
                     exit(1)
