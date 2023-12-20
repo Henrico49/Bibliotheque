@@ -12,6 +12,7 @@ import shutil
 import configparser
 import sys
 from fpdf import FPDF
+from unidecode import unidecode
 
 # pour rajouter un format de fichier, ajoutez l'extension au tuple:
 extensions = ('.pdf', '.epub')
@@ -78,10 +79,13 @@ def recup_PDF(pdf_path):
     with fitz.open(pdf_path) as pdf_document:
         # Récupère le sujet
         sujet = pdf_document.metadata.get("subject", None)
+        sujet = unidecode(sujet)
         # Récupère l'auteur
         auteur = pdf_document.metadata.get("author", None)
+        auteur = unidecode(auteur)
         # Récupère le titre
         titre = pdf_document.metadata.get("title", None)
+        titre = unidecode(titre)
         # Récupère la date et la langue
         date, language = recup_date_langue(pdf_path, 0)
 
@@ -94,23 +98,24 @@ def recup_EPUB(epub_path):
     livre = epub.read_epub(epub_path)
     # Récupère la date
     date = livre.get_metadata('DC', 'date')[0][0] if livre.get_metadata('DC', 'date') else "/"
-
     # Récupère le sujet
-    sujet = livre.get_metadata('DC', 'description')[0][0] if livre.get_metadata('DC', 'description') else " "
-
+    sujet = livre.get_metadata('DC', 'description')[0][0] if livre.get_metadata('DC', 'description') else "/"
     # Si le sujet est trop long, le tronquer
-    if len(sujet) > 50:
+    if type(sujet).__name__=="str":
+        sujet = unidecode(sujet)
+    if type(sujet).__name__=="str" and len(sujet) > 50:
         sujet = sujet[:50] + "..."
-
     # Récupère le titre du livre
-    titre = livre.get_metadata('DC', 'title')[0][0] if livre.get_metadata('DC', 'title') else None
-
+    titre = livre.get_metadata('DC', 'title')[0][0] if livre.get_metadata('DC', 'title') else ""
+    if type(titre).__name__=="str":
+        titre = unidecode(titre)
     # Récupère la langue du livre
-    language = livre.get_metadata('DC', 'language')[0][0] if livre.get_metadata('DC', 'language') else None
-
+    language = livre.get_metadata('DC', 'language')[0][0] if livre.get_metadata('DC', 'language') else ""
     # Récupère l'auteur du livre
     auteur = ", ".join(author[0] for author in livre.get_metadata('DC', 'creator')) if livre.get_metadata('DC',
-                                                                                                          'creator') else None
+                                                                                                            'creator') else ""
+    if type(auteur).__name__=="str":
+        auteur = unidecode(auteur)
     dict = {'titre': titre, 'auteur': auteur, 'date': date, 'sujet': sujet, 'langue': language}
     return dict
 
@@ -229,12 +234,13 @@ def rapport_EPUB(dossierArrive, contenu, sortie):
     nom_sortie = 'rapport_' + sortie + '.epub'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     epub.write_epub(chemin_arriver, book, {})
+    print(f"Le rapport {nom_sortie} a été créé.")
 
 
 # redéfinition de la classe FPDF pour pouvoir créer un rapport au format PDF
 class PDF(FPDF):
     def header(self):
-        self.set_font('helvetica', 'B', 12)
+        self.set_font('Times', '', 12)
         self.cell(60)
         self.cell(70, 10, 'Rapport de la bibliothèque', 1, 1, 'C')
         self.ln(20)
@@ -245,8 +251,8 @@ def rapport_PDF(dossierArrive, contenu, sortie):
     pdf = PDF("P", "mm", "A4")
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font('helvetica', size=12)
     pdf.multi_cell(0, 7, contenu, align='L')
     nom_sortie = 'rapport_' + sortie + '.pdf'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
     pdf.output(chemin_arriver, 'F')
+    print(f"Le rapport {nom_sortie} a été créé.")
