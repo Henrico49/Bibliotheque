@@ -52,24 +52,32 @@ try:
             if sys.argv[1] == "-c":
                 if sys.argv[2].endswith(".conf"):
                     chemin_bibliotheque, chemin_etats, nb_max = f.config_defaut()
+                    if sys.argv[3] == "rapports":
+                        b1 = Simple_bibli(chemin_bibliotheque)
+                        b1.rapport_livres("PDF", chemin_etats)
+                        b1.rapport_livres("EPUB", chemin_etats)
+                        b1.rapport_auteurs("PDF", chemin_etats)
+                        b1.rapport_auteurs("EPUB", chemin_etats)
+                    elif f.est_lien_web(sys.argv[3]):
+                        b1 = bibli(chemin_bibliotheque)
+                        b1.alimenter(sys.argv[3], nb_max)
+                    else:
+                        print("Combinaison d'option non pris en compte.")
+                        exit(1)
                 else:
                     print("Veuillez indiquer un fichier de configuration après -c.")
                     exit(1)
-                if sys.argv[3] == "rapports":
-                    b1 = Simple_bibli(chemin_bibliotheque)
-                    b1.rapport_livres("PDF", chemin_etats)
-                    b1.rapport_livres("EPUB", chemin_etats)
-                    b1.rapport_auteurs("PDF", chemin_etats)
-                    b1.rapport_auteurs("EPUB", chemin_etats)
-                elif f.est_lien_web(sys.argv[3]):
-                    b1 = bibli(chemin_bibliotheque)
-                    b1.alimenter(sys.argv[3],nb_max)
+            else:
+                if f.est_lien_web(sys.argv[1]) and sys.argv[2].isdigit() and sys.argv[3] == "rapports":
+                    b1 = bibli_scrap()
+                    b1.scrap(sys.argv[1], int(sys.argv[2]))
+                    b1.rapport_livres("PDF")
+                    b1.rapport_livres("EPUB")
+                    b1.rapport_auteurs("PDF")
+                    b1.rapport_auteurs("EPUB")
                 else:
                     print("Combinaison d'option non pris en compte.")
                     exit(1)
-            else:
-                print("Combinaison d'option non pris en compte.")
-                exit(1)
         case 5:
             if sys.argv[1] == "-c":
                 if sys.argv[2].endswith(".conf"):
