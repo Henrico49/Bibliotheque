@@ -40,8 +40,14 @@ pouvoir facilement ajouter d’autres formats.
  page web à partir d'un url.
 * La fonction `scrap` de la classe `bibli_scrap`.
 
-## Utilisation
-### 1. Modules nécessaires
+### 3. Fichier de configuration et rapports
+L'objectif ici est de permettre de lancer le programme avec des arguments (url, profondeur...) pour pouvoir créer une
+bibliothèque et de l'alimenter. Mais aussi de pouvoir consulter le contenu de la bibliothèque sous forme
+de rapports (par auteur ou par livre) au format PDF et EPUB (possibilité d'implémenter un nouveau format).
+## Application
+Ce programme est conçu pour gérer une bibliothèque de livres en ligne de commande. Il prend en charge plusieurs options pour alimenter la bibliothèque, générer des rapports sur les livres et les auteurs, en fonction des arguments fournis lors de son exécution.
+
+### Modules nécessaires
 Pour utiliser le programme, il faut installer les modules suivants :
 * `requests` pour accéder aux pages web.
 * `bs4` from `beautifulsoup4` pour analyser les pages web.
@@ -60,13 +66,76 @@ Vous pouvez les installer en utilisant la commande suivante :
 * `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect regex ebooklib`
 
 
+
+### Options disponibles :
+
+1. **Aucun argument fourni :**
+   Si aucun argument n'est fourni lors de l'exécution du programme, il affichera des exemples d'options disponibles :
+   ```bash
+   Veuillez indiquer les options à utiliser quelques exemples ci-dessous :
+   https://math.univ-angers.fr/~jaclin/biblio/livres/
+   rapports
+   -c config.conf
+   -c config.conf rapports
+   -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
+   -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/ 10
+   ```
+
+2. **Un argument fourni :**
+   - Si l'argument est `-c`, le programme attend un fichier de configuration à indiquer.
+   - Si l'argument est "rapports", des rapports sur les livres et les auteurs seront générés au format PDF et EPUB.
+   - Si l'argument est un lien web, le programme alimentera la bibliothèque à partir de ce lien.
+
+3. **Deux arguments fournis :**
+   - Si les deux arguments sont `-c` suivi d'un fichier de configuration, le programme utilisera ce fichier pour initialiser la bibliothèque.
+   - Si le premier argument est un lien web et le deuxième un nombre, le programme effectuera un scraping de la bibliothèque à partir du lien web en précisant le nombre de livres à récupérer.
+
+4. **Trois arguments fournis :**
+   - Si les trois arguments sont `-c`, un fichier de configuration, et "rapports", le programme générera des rapports en utilisant le chemin spécifié dans le fichier de configuration.
+   - Si le premier argument est `-c` avec un fichier de configuration et le troisième un lien web, le programme alimentera la bibliothèque à partir du lien spécifié.
+
+5. **Quatre arguments fournis :**
+   - Si les quatre arguments sont `-c` avec un fichier de configuration, un lien web, et un nombre, le programme effectuera un scraping à partir du lien web pour récupérer le nombre de livres spécifié.
+
+### Exemples d'utilisation :
+
+- Pour générer des rapports de livres et d'auteurs :
+  ```bash
+  python nom_du_programme.py rapports
+  ```
+
+- Pour utiliser un fichier de configuration spécifique et alimenter la bibliothèque depuis un lien web :
+  ```bash
+  python nom_du_programme.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
+  ```
+
+- Pour effectuer un scraping de la bibliothèque depuis un lien web et récupérer un nombre spécifique de livres :
+  ```bash
+  python nom_du_programme.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 10
+  
+## Ajout d'un nouveau format de livre
+Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
+Pour ajouter un nouveau format de livre, il faut :
+* Importer les modules nécessaires pour gérer le nouveau format de livre.
+* Pour ajouter un nouveau format de livre, il faut créer une nouvelle classe héritant de la classe `Livre`.
+* Implémenter la fonction `recup_format(self, path)` dans `fonctions_fichier.py` qui permet de récupérer les métadonnées du livre à partir du chemin d'accès du livre.
+* Rajouter un élément dans le tuple `extensions` dans `fonctions_fichier.py` contenant l'extension du nouveau format de livre.
+* Ajouter un `case '.format'` dans la fonction `telecharger` de `bibli` et dans le constructeur de `simple_bibli`.
+
+
+## Détails techniques
+
 ### 2. Classe : `simple_blibli`
 La classe `simple_bibli` hérite de `base_bibli` permet de créer une bibiliothèque à partir de livres stockés sur l'ordinateur.
 Elle s'utilise comme suit :
 * Création de la bibliothèque avec le chemin d'accès du dossier qui sera utilisé pour stocker les livres.
-        S'il n'existe pas il est créé et s'il n'est pas renseigné un dossier *défaut* sera créé.
+        S'il n'existe pas, il est créé et s'il n'est pas renseigné un dossier *défaut* sera créé.
 * On y ajoute des livres en utilisant la fonction `ajouter(self, livre)` qui prend en paramètre obligatoire, le
     chemin d'accès du livre que l'on veut ajouter au dossier.
+* `rapport_livres(self, format, fichier='./rapport')` : génère un rapport au format donné en paramètre listant tous les livres présents dans la
+bibliothèque, un par un. Ce rapport est enregistré dans le dossier donné en paramètre.
+* `rapport_auteurs(self, format, fichier='./rapport')` : génère un rapport au format donné en paramètre listant tous les livres présents dans la
+bibliothèque, triés par auteur. Ce rapport est enregistré dans le dossier donné en paramètre.
 
 ### 3. Classe : `bibli`
 La classe `bibli` hérite de `simple_bibli` et permet en plus d'alimenter la bibliothèque avec des livres téléchargés sur internet. Elle s'utilise comme suit : 
@@ -92,14 +161,16 @@ Ce fichier contient les fonctions permettant de récupérer les métadonnées de
 * `recup_liens_externes(url)` : récupère les liens des pages web externes à partir de l'url de la page web.
 * `est_lien_web(chaine)` : vérifie si la chaîne de caractère est un lien web.
 * `est_url_valide(url)` : vérifie si l'url est valide, à savoir s'il dirige effectivement vers une page web différente.
+* `lire_config(chemin_fichier)` : récupère le contenu du fichier de configuration donné en paramètre.
+* `config_defaut()` : récupère les paramètres donnés par le fichier de configuration.
+* `rapport_EPUB(dossierArrive, contenu, sortie)` : créer un document au format EPUB à partir du contenu dans le dossier
+*dossierArrive* et ayant pour nom *rapport_'sortie'.epub*.
+* Classe `PDF`
+* `rapport_PDF(dossierArrive, contenu, sortie)` : créer un document au format PDF à partir du contenu dans le dossier
+*dossierArrive* et ayant pour nom *rapport_'sortie'.PDF*.
 
-## Ajout d'un nouveau format de livre
-Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
-Pour ajouter un nouveau format de livre, il faut :
-* Importer les modules nécessaires pour gérer le nouveau format de livre.
-* Pour ajouter un nouveau format de livre, il faut créer une nouvelle classe héritant de la classe `Livre`.
-* Implémenter la fonction `recup_format(self, path)` dans `fonctions_fichier.py` qui permet de récupérer les métadonnées du livre à partir du chemin d'accès du livre.
-* Rajouter un élément dans le tuple `extensions` dans `fonctions_fichier.py` contenant l'extension du nouveau format de livre.
-* Ajouter un `case '.format'` dans la fonction `telecharger` de `bibli` et dans le constructeur de `simple_bibli`.
+
+  
+
 
 
