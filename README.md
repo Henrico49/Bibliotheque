@@ -61,9 +61,10 @@ Pour utiliser le programme, il faut installer les modules suivants :
 * `shutil` pour copier des fichiers 
 * `configparser` pour lire les fichiers de configuration
 * `sys` permet d'avoir accès aux options données au programme
+* `fpdf` permet de créer des fichiers PDF
 
 Vous pouvez les installer en utilisant la commande suivante :
-* `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect regex ebooklib`
+* `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect ebooklib fpdf`
 
 
 
