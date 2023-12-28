@@ -78,14 +78,14 @@ Vous pouvez les installer en utilisant la commande suivante :
 
 3. **Deux arguments fournis :**
    - Si les deux arguments sont `-c` suivi d'un fichier de configuration, le programme utilisera ce fichier pour initialiser la bibliothèque.
-   - Si le premier argument est un lien web et le deuxième un nombre, le programme effectuera un scraping de la bibliothèque à partir du lien web en précisant le nombre de livres à récupérer.
+   - Si le premier argument est un lien web et le deuxième un nombre, le programme effectuera un scraping de la bibliothèque à partir du lien web avec la profondeur de recherche donnée.
 
 4. **Trois arguments fournis :**
    - Si les trois arguments sont `-c`, un fichier de configuration, et "rapports", le programme générera des rapports en utilisant le chemin spécifié dans le fichier de configuration.
    - Si le premier argument est `-c` avec un fichier de configuration et le troisième un lien web, le programme alimentera la bibliothèque à partir du lien spécifié.
 
 5. **Quatre arguments fournis :**
-   - Si les quatre arguments sont `-c` avec un fichier de configuration, un lien web, et un nombre, le programme effectuera un scraping à partir du lien web pour récupérer le nombre de livres spécifié.
+   - Si les quatre arguments sont `-c` avec un fichier de configuration, un lien web, et un nombre, le programme effectuera un scraping à partir du lien web pour récupérer les livres avec la profondeur de recherche spécifié.
 
 ### Exemples d'utilisation :
 
