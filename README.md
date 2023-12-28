@@ -99,20 +99,20 @@ Vous pouvez les installer en utilisant la commande suivante :
   python nom_du_programme.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
   ```
 
-- Pour effectuer un scraping de la bibliothèque depuis un lien web et récupérer un nombre spécifique de livres :
+- Pour effectuer un scraping de la bibliothèque depuis un lien web avec une profondeur de recherche donnée :
   ```bash
-  python nom_du_programme.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 10
+  python nom_du_programme.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 2
   
 ## Ajout d'un nouveau format de livre
 Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
 Pour ajouter un nouveau format de livre, il faut :
 * Importer les modules nécessaires pour gérer le nouveau format de livre.
 * Pour ajouter un nouveau format de livre, il faut créer une nouvelle classe héritant de la classe `Livre`.
-* Implémenter la fonction `recup_format(self, path)` dans `fonctions_fichier.py` qui permet de récupérer les métadonnées du livre à partir du chemin d'accès du livre.
+* Implémenter la fonction `recup_format(path)` dans `fonctions_fichier.py` qui permet de récupérer les métadonnées du livre à partir du chemin d'accès du livre.
 * Rajouter un élément dans le tuple `extensions` dans `fonctions_fichier.py` contenant l'extension du nouveau format de livre.
 * Ajouter un `case '.format'` dans la fonction `telecharger` de `bibli` et dans le constructeur de `simple_bibli`.
 * Pour ajouter un nouveau format de rapport, il faut implémenter une nouvelle fonction `rapport_format(dossierArrive, contenu, sortie)` dans 
-`fonctions_fichier.py`. Ainsi que rajouter un *case* dans les fonctions `rapport_livres(self, format, fichier='./rapport')` et `rapport_auteurs(self, format, fichier='./rapport')` avec le format correspondant.
+`fonctions_fichier.py` qui permettra d'écrire ce nouveau rapport. Ainsi que rajouter un *case* dans les fonctions `rapport_livres(self, format, fichier='./rapport')` et `rapport_auteurs(self, format, fichier='./rapport')` avec le format correspondant.
 
 ## Détails techniques
 
