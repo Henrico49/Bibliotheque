@@ -44,7 +44,10 @@ try:
             else:
                 if f.est_lien_web(sys.argv[1]) and sys.argv[2].isdigit():
                     b1 = bibli_scrap()
-                    b1.alimenter(sys.argv[1], int(sys.argv[2]))
+                    b1.scrap(sys.argv[1], int(sys.argv[2]))
+                else:
+                    print("Combinaison d'option non pris en compte.")
+                    exit(1)
         case 4:
             if sys.argv[1] == "-c":
                 if sys.argv[2].endswith(".conf"):
