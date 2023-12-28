@@ -138,7 +138,7 @@ La classe `bibli` hérite de `simple_bibli` et permet en plus d'alimenter la bib
 La classe `bibli_scrap` hérite de `bibli` et permet en plus de récupérer les livres d'une page web à partir d'un web scrapping. Elle s'utilise comme suit :
 * On crée la bibliothèque de la même manière que `bibli`.
 * `scrap(self, url, profondeur=0, nbmax=10)` récupère les livres de la page web correspondant à l'url donné, au maximum *nbmax*.
- Si *nbmax* n'est pas atteint et que *profondeur* est supérieur à 0, on récupère les livres des pages web récupérés sur la page web de l'*url* donné.
+ Si *nbmax* n'est pas atteint et que *profondeur* est supérieure à 0, on récupère les livres des pages web récupérés sur la page web de l'*url* donné.
 On effectura cette opération au maximum *profondeur* fois.
 
 ### 4. Fichier : `fonctions_fichier.py`
