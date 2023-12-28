@@ -233,6 +233,11 @@ def rapport_EPUB(dossierArrive, contenu, sortie):
     # create epub file
     nom_sortie = 'rapport_' + sortie + '.epub'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
+    if not os.path.exists(dossierArrive):
+        # Crée le dossier si celui-ci n'existe pas
+        print(f"Le dossier {dossierArrive} n'existe pas.")
+        print(f"Création du dossier {dossierArrive}.")
+        os.makedirs(dossierArrive)
     epub.write_epub(chemin_arriver, book, {})
     print(f"Le rapport {nom_sortie} a été créé.")
 
@@ -254,5 +259,10 @@ def rapport_PDF(dossierArrive, contenu, sortie):
     pdf.multi_cell(0, 7, contenu, align='L')
     nom_sortie = 'rapport_' + sortie + '.pdf'
     chemin_arriver = os.path.join(dossierArrive, nom_sortie)
+    if not os.path.exists(dossierArrive):
+        # Crée le dossier si celui-ci n'existe pas
+        print(f"Le dossier {dossierArrive} n'existe pas.")
+        print(f"Création du dossier {dossierArrive}.")
+        os.makedirs(dossierArrive)
     pdf.output(chemin_arriver, 'F')
     print(f"Le rapport {nom_sortie} a été créé.")
