@@ -1,13 +1,13 @@
 # Projet Bibliothèque
 
-*Alexandre et Noé*
+*Alexandre SALGUEIRO et Noé WAHL*
 
 ## Objectifs
 
 L’objectif est de concevoir une application pour constituer et suivre une bibliothèque de livres. L’idée est de pouvoir
 collecter des livres sur le web (web scraping) pour constituer une bibliothèque, et générer divers catalogues de cette
 bibliothèque. On s’intéresse ici aux livres au format EPUB et PDF. Mais l’application doit être extensible de façon à
-pouvoir facilement ajouter d’autres formats.
+pouvoir facilement ajouter d’autres formats. Le sujet peut être consulté [ici](https://math.univ-angers.fr/~jaclin/site2024/W.95!ll1Q_ds1/python_objet/2024/heritage/BiblioScrap/BiblioScrap.html).
 
 ## Fonctionnalités
 
@@ -28,7 +28,7 @@ pouvoir facilement ajouter d’autres formats.
 Consultations des projets des autres groupes. Nous avons conservé l'intégralité de notre code.
 
 
-### 3. Etape III
+### Etape III
 * Implémentation des fonctions pour générer des rapports sur le contenu de la bibliothèque.
 * Création de l'application principale.
 * Prise en charge des différents arguments dont les fichiers de configuration.
@@ -43,14 +43,14 @@ Pour utiliser le programme, il faut installer les modules suivants :
 * `urllib3` pour extraire les liens des pages web.
 * `fitz` from `PyMuPDF` pour extraire les métadonnées des fichiers PDF.
 * `detect` from `langdetect` pour détecter la langue du fichier.
-* `re` permet de créer des expressions régulières
+* `re` permet de créer des expressions régulières.
 * `epub` from `ebooklib` pour extraire les métadonnées des fichiers EPUB.
 * `warnings` pour gérer les avertissements.
 * `os` pour gérer les fichiers et dossiers.
-* `shutil` pour copier des fichiers 
-* `configparser` pour lire les fichiers de configuration
-* `sys` permet d'avoir accès aux options données au programme
-* `fpdf` permet de créer des fichiers PDF
+* `shutil` pour copier des fichiers.
+* `configparser` pour lire les fichiers de configuration.
+* `sys` permet d'avoir accès aux options données au programme.
+* `fpdf` permet de créer des fichiers PDF.
 
 Vous pouvez les installer en utilisant la commande suivante :
 * `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect ebooklib fpdf`
@@ -87,21 +87,30 @@ Vous pouvez les installer en utilisant la commande suivante :
 5. **Quatre arguments fournis :**
    - Si les quatre arguments sont `-c` avec un fichier de configuration, un lien web, et un nombre, le programme effectuera un scraping à partir du lien web pour récupérer les livres avec la profondeur de recherche spécifié.
 
+#### Fichier de configuration
+Le fichier de configuration doit obligatoirement être rédigé dans la forme suivante :
+``` conf
+[Bibliotheque]
+bibliotheque=tmp/bibli/livres
+etats=tmp/bibli/etats
+nbmax=10
+```
+Les chemins d'accès et le nombre maximum de livres pouvant évidemment être modifiés.
 ### Exemples d'utilisation :
 
 - Pour générer des rapports de livres et d'auteurs :
   ```bash
-  python nom_du_programme.py rapports
+  python main.py rapports
   ```
 
 - Pour utiliser un fichier de configuration spécifique et alimenter la bibliothèque depuis un lien web :
   ```bash
-  python nom_du_programme.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
+  python main.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
   ```
 
 - Pour effectuer un scraping de la bibliothèque depuis un lien web avec une profondeur de recherche donnée :
   ```bash
-  python nom_du_programme.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 2
+  python main.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 2
   
 ## Ajout d'un nouveau format de livre
 Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
@@ -156,12 +165,26 @@ Ce fichier contient les fonctions permettant de récupérer les métadonnées de
 * `config_defaut()` : récupère les paramètres donnés par le fichier de configuration.
 * `rapport_EPUB(dossierArrive, contenu, sortie)` : créer un document au format EPUB à partir du contenu dans le dossier
 *dossierArrive* et ayant pour nom *rapport_'sortie'.epub*.
-* Classe `PDF`
+* Classe `PDF` permet de gérer la création d'un document PDF.
 * `rapport_PDF(dossierArrive, contenu, sortie)` : créer un document au format PDF à partir du contenu dans le dossier
 *dossierArrive* et ayant pour nom *rapport_'sortie'.pdf*.
 
+## Bibliograhie
+- Python Software Foundation. (2021). Python Requests Documentation. https://docs.python-requests.org/en/latest/  
+- Crummy. (2022). Beautiful Soup Documentation. https://www.crummy.com/software/BeautifulSoup/bs4/doc/  
+- Urllib3 Project. (2020). Urllib3 Documentation. https://urllib3.readthedocs.io/en/latest/  
+- PyMuPDF Team. (2023). PyMuPDF Documentation. https://pymupdf.readthedocs.io/en/latest/  
+- PyPI. (2021). Langdetect on PyPI. https://pypi.org/project/langdetect/  
+- Python Software Foundation. re - Regular Expression Operations. https://docs.python.org/3/library/re.html  
+- PyPI. (2022). Ebooklib on PyPI. https://pypi.org/project/Ebooklib/  
+- Python Software Foundation. warnings - Warning Control. https://docs.python.org/3/library/warnings.html  
+- Python Software Foundation. os - Miscellaneous Operating System Interfaces. https://docs.python.org/3/library/os.html  
+- Python Software Foundation. shutil - High-Level File Operations. https://docs.python.org/3/library/shutil.html  
+- Python Software Foundation. configparser - Configuration file parser. https://docs.python.org/3/library/configparser.html  
+- Python Software Foundation. sys - System-specific Parameters and Functions. https://docs.python.org/3/library/sys.html  
+- PyPI. (2020). FPDF on PyPI. https://pypi.org/project/fpdf/  
 
-  
+
 
 
 
