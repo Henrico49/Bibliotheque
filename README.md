@@ -28,7 +28,7 @@ pouvoir facilement ajouter d’autres formats.
 Consultations des projets des autres groupes. Nous avons conservé l'intégralité de notre code.
 
 
-### 3. Etape III
+### Etape III
 * Implémentation des fonctions pour générer des rapports sur le contenu de la bibliothèque.
 * Création de l'application principale.
 * Prise en charge des différents arguments dont les fichiers de configuration.
@@ -91,17 +91,17 @@ Vous pouvez les installer en utilisant la commande suivante :
 
 - Pour générer des rapports de livres et d'auteurs :
   ```bash
-  python nom_du_programme.py rapports
+  python main.py rapports
   ```
 
 - Pour utiliser un fichier de configuration spécifique et alimenter la bibliothèque depuis un lien web :
   ```bash
-  python nom_du_programme.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
+  python main.py -c config.conf https://math.univ-angers.fr/~jaclin/biblio/livres/
   ```
 
 - Pour effectuer un scraping de la bibliothèque depuis un lien web avec une profondeur de recherche donnée :
   ```bash
-  python nom_du_programme.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 2
+  python main.py https://math.univ-angers.fr/~jaclin/biblio/livres/ 2
   
 ## Ajout d'un nouveau format de livre
 Le programme de base permet de gérer les livres au format PDF et EPUB. Il est cependant possible de rajouter de nouveaux formats de livres. 
