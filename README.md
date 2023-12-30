@@ -51,9 +51,10 @@ Pour utiliser le programme, il faut installer les modules suivants :
 * `configparser` pour lire les fichiers de configuration.
 * `sys` permet d'avoir accès aux options données au programme.
 * `fpdf` permet de créer des fichiers PDF.
+* `unidecode` pour convertir des caractères non unicode en unicode.
 
 Vous pouvez les installer en utilisant la commande suivante :
-* `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect ebooklib fpdf`
+* `pip install requests beautifulsoup4 urllib3 PyMuPDF langdetect ebooklib fpdf unidecode`
 
 
 
@@ -182,7 +183,8 @@ Ce fichier contient les fonctions permettant de récupérer les métadonnées de
 - Python Software Foundation. shutil - High-Level File Operations. https://docs.python.org/3/library/shutil.html  
 - Python Software Foundation. configparser - Configuration file parser. https://docs.python.org/3/library/configparser.html  
 - Python Software Foundation. sys - System-specific Parameters and Functions. https://docs.python.org/3/library/sys.html  
-- PyPI. (2020). FPDF on PyPI. https://pypi.org/project/fpdf/  
+- PyPI. (2020). FPDF on PyPI. https://pypi.org/project/fpdf/
+- PyPI. (2023). Unidecode on PyPI https://pypi.org/project/Unidecode/ 
 
 
 
