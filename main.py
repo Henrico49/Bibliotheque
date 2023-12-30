@@ -88,6 +88,13 @@ try:
                 if f.est_lien_web(sys.argv[3]) and sys.argv[4].isdigit():
                     b1 = bibli_scrap(chemin_bibliotheque)
                     b1.scrap(sys.argv[3], int(sys.argv[4]))
+                elif f.est_lien_web(sys.argv[3]) and sys.argv[4] == "rapports":
+                    b1 = bibli(chemin_bibliotheque)
+                    b1.alimenter(sys.argv[3], nb_max)
+                    b1.rapport_livres("PDF", chemin_etats)
+                    b1.rapport_livres("EPUB", chemin_etats)
+                    b1.rapport_auteurs("PDF", chemin_etats)
+                    b1.rapport_auteurs("EPUB", chemin_etats)
                 else:
                     print("Combinaison d'option non pris en compte.")
                     exit(1)
